@@ -3,14 +3,16 @@ import ReactDOM from 'react-dom';
 import './index.css';
 // import App from './App';
 import * as serviceWorker from './serviceWorker';
-import $ from 'jquery';
-import Popper from 'popper.js';
+// import $ from 'jquery';
+// import Popper from 'popper.js';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Logo  from './components/logoComponent/logo';
+import Header from './components/headerComponent/header';
+import Home from './components/homeComponent/home';
 
 // ReactDOM.render(<App />, document.getElementById('root'));
-ReactDOM.render(<Logo/>, document.getElementById('root'));
+ReactDOM.render(<Header/>, document.getElementById('header'));
+ReactDOM.render(<Home/>, document.getElementById('home'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

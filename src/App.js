@@ -1,8 +1,6 @@
 import React from 'react';
 import './App.css';
 
-import Logo from './components/logoComponent/logo';
-
 function App() {
   return (
     <div className="App">
@@ -20,7 +18,6 @@ function App() {
           Learn React
         </a>
       </header> */}
-      <Logo/>
     </div>
     
   );
