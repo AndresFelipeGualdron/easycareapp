@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 
-import HolaMundo from './components/holaMundoComponent/holaMundo';
+import Logo from './components/logoComponent/logo';
 
 function App() {
   return (
@@ -20,7 +20,7 @@ function App() {
           Learn React
         </a>
       </header> */}
-      <HolaMundo/>
+      <Logo/>
     </div>
     
   );
