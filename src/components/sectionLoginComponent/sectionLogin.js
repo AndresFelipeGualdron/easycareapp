@@ -10,12 +10,12 @@ export default class SectionLogin extends Component{
                 <center>
                     <div className="btnLogin">
                         <a href="/iniciarSesion">
-                            <button className="btn btn-outline btn-light">Iniciar Sesión</button>
+                            <button className="btn btn-outline btn-light btn-block">Iniciar Sesión</button>
                         </a>
                     </div>
                     <div className="btnLogin">
                         <a href="/registro">
-                            <button className="btn btn-outline btn-light">Registrarse</button>
+                            <button className="btn btn-outline btn-light btn-block">Registrarse</button>
                         </a>
                     </div>
                 </center>
