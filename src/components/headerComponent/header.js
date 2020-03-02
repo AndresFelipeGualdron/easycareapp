@@ -7,15 +7,15 @@ export default class Header extends Component{
 
     render(){
         return (
-            <div className="row">
+            <React.Fragment>
                 <div className="col-lg-6 col-md-12">
                     <Logo/>
                 </div>
                 <div className="col-lg-6 col-md-12">
                     <SectionLogin/>
                 </div>
-                <hr/> 
-            </div>
+            </React.Fragment>
+            
         );
     }
 }

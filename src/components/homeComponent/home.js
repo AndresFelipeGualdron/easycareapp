@@ -8,11 +8,11 @@ export default class Home extends Component{
 
     render(){
         return (
-            <div>
-                <div>
+            <div className="container-fluid">
+                <div className="row">
                     <Header/>
                 </div>
-                <div>
+                <div className="row">
                     <Bienvenida/>
                 </div>
             </div>

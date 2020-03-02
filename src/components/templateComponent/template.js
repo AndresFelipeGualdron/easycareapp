@@ -17,11 +17,15 @@ export default class Template extends Component{
                     </Route>
 
                     <Route exact path="/iniciarSesion">
-                        <Login/>
+                        <div className="container">
+                            <Login/>
+                        </div>
                     </Route>
 
                     <Route exact path="/registro">
-                        <Registro/>
+                        <div className="container">
+                            <Registro/>
+                        </div>         
                     </Route>
 
                 </React.Fragment>

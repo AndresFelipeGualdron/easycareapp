@@ -7,9 +7,8 @@ export default class Logo extends Component{
         
 
         return (
-            <div className="container-fluid col-lg-12">
+            <div className="col-lg-12">
                 <a href="/"><img className="img img-responsive mx-auto d-block" alt="imagen principal" src="/img/logo.PNG"/></a>
-                {/* <button className="form-control" onMouseMoveCapture={this.saludar} onClickCapture={this.saludar} type="button">Saluda.</button> */}
             </div>            
         );
     }

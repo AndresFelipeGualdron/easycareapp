@@ -8,7 +8,7 @@ export default class Login extends Component{
 
     render(){
         return (
-            <div className="container">
+            <React.Fragment>
                 <div className="">
                     <Logo/>
                 </div>
@@ -28,7 +28,8 @@ export default class Login extends Component{
                     <a href="/registro"><h6>No tienes cuanta?</h6></a>
                     <button className="btn btn-light">Ingresar</button>
                 </div>
-            </div>
+            </React.Fragment>
+            
         );
     }
 }
