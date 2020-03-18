@@ -6,8 +6,6 @@ export default class LoginService{
 
     login = function(correo, password, callSuccess, callError, init) {
 
-        console.log();
-
         if(localStorage.getItem(ACCESS_TOKEN)) {
             console.log("token encontrado");
             init = {
@@ -21,7 +19,7 @@ export default class LoginService{
             };
         }
 
-        fetch(API_BASE_URL+"/clients/login/"+correo+"/"+password,init)
+        fetch(API_BASE_URL_BACK+"/clients/login/"+correo+"/"+password,init)
         .then(function(response){
             if(response.ok) return response.text();
             callError();
