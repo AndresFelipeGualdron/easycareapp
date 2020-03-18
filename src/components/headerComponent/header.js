@@ -12,7 +12,8 @@ export default class Header extends Component{
                     <Logo/>
                 </div>
                 <div className="col-lg-6 col-md-12">
-                    <SectionLogin/>
+                    <SectionLogin
+                    />
                 </div>
             </React.Fragment>
             

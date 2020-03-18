@@ -7,10 +7,13 @@ export default class LoginService{
     login = function(correo, password, callSuccess, callError, init) {
 
         if(localStorage.getItem(ACCESS_TOKEN)) {
+            var header = new Headers({
+                Authorization : 'Bearer ' + localStorage.getItem(ACCESS_TOKEN)
+            });
             console.log("token encontrado");
             init = {
                 method : "POST",
-                Authorization : 'Bearer ' + localStorage.getItem(ACCESS_TOKEN)
+                headers : header
             };
             // init.append('Authorization', 'Bearer ' + localStorage.getItem(ACCESS_TOKEN));
         }else{
@@ -31,5 +34,28 @@ export default class LoginService{
         
         
     
+    }
+
+    validate = function(correcto, incorrecto){
+        var header = new Headers({
+            Authorization : 'Bearer ' + localStorage.getItem(ACCESS_TOKEN)
+        });
+        var init = {
+            method : "POST",
+            headers : header
+        };
+
+        fetch(API_BASE_URL_BACK+"/clients/login/validate",init)
+        .then(function(response){
+            if(response.ok){
+                correcto()
+            }else{
+                incorrecto()
+            }
+        })
+        .catch((error) => {
+            console.log("EROR: "+error);
+            incorrecto();
+        });
     }
 }
