@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
+import { ACCESS_TOKEN } from '../../constants/index';
 
 import Logo from '../logoComponent/logo';
 import ModalCargando from '../modalCargandoComponent/modalCargando';
-import RequestService from '../../services/requestService';
+import LoginService from '../../services/loginService';
 
 import './login.css';
 
@@ -13,7 +14,8 @@ export default class Login extends Component{
         this.state = {
             correo: "",
             password: "",
-            cargando: false
+            cargando: false,
+            sesionIniciada : false
         };
         this.hadleChange = this.hadleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -25,7 +27,8 @@ export default class Login extends Component{
         this.setState({
             correo: this.state.correo,
             password: this.state.password,
-            cargando: false
+            cargando: false,
+            sesionIniciada: this.state.sesionIniciada
         });
     }
 
@@ -35,45 +38,46 @@ export default class Login extends Component{
         });
     }
 
+    iniciarSesion(){
+        this.setState({
+            correo: this.state.correo,
+            password: this.state.password,
+            cargando: this.state.cargando,
+            sesionIniciada: true
+        });
+    }
+
     handleSubmit = (event) => {
         // console.log(event.target);
         this.setState({
             correo: this.state.correo,
             password: this.state.password,
-            cargando: true
+            cargando: true,
+            sesionIniciada: this.state.sesionIniciada
         });
-
-        new RequestService().saludar();
-        
-
         event.preventDefault();
-        var miInit = {
+
+        var miInit = new Headers({
             method: 'POST'
-        };
+        });
 
         var terminado = this.cerrarModal;
 
-        var loginAceptado = function(usuario){
-                        
+        var loginAceptado = function(token){
+            localStorage.setItem(ACCESS_TOKEN, token);
+            terminado();
         }
-    
+
         var loginRechazado = function(){
+            terminado();
             alert("login no aceptado");
         }
 
-        // fetch("http://localhost:8080/client/login/?correo="+this.state.correo+"&"+"password="+this.state.password,miInit)
-        // .then(function(response){
-        //     terminado();
-        //     if(response.ok) return response.json();
-        //     loginRechazado();
-        // })
-        // .then(function(response){
-        //     console.log(response);
-        //     loginAceptado(response);
-        // })
-        // .catch(function(error){
-        //     console.log(error);
-        // });
+        new LoginService().login(this.state.correo,this.state.password, loginAceptado, loginRechazado, miInit);
+    
+        
+
+        
     }
 
     render(){
