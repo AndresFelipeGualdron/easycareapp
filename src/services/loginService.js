@@ -31,9 +31,7 @@ export default class LoginService{
             console.log(data);
             callSuccess(data);
         });
-        
-        
-    
+
     }
 
     validate = function(correcto, incorrecto){

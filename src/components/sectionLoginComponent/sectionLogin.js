@@ -11,17 +11,21 @@ export default class SectionLogin extends Component{
         this.state = {
             claseBoton : "",
             nombreBotonRegistro: "Registrarse",
-            linkRegistroLogout: "/registro"
+            linkRegistroLogout: "/registro",
+            clientesPrueba: []
         }
         this.verificarAutenticacion = this.verificarAutenticacion.bind(this);
         this.validacionCorrecta = this.validacionCorrecta.bind(this);
         this.validacionIncorrecta = this.validacionIncorrecta.bind(this);
         this.cerrarSesion = this.cerrarSesion.bind(this);
+        
 
 
         this.verificarAutenticacion();
         
     }
+
+
     //VERIFICAR LOGIN
 
 
@@ -53,7 +57,7 @@ export default class SectionLogin extends Component{
     //FIN VALIDACION LOGIN
 
     cerrarSesion = function(event){
-        if(this.state.nombreBotonRegistro == "Cerrar Sesión"){
+        if(this.state.nombreBotonRegistro === "Cerrar Sesión"){
             event.preventDefault();
             localStorage.removeItem(ACCESS_TOKEN);
             this.verificarAutenticacion();
