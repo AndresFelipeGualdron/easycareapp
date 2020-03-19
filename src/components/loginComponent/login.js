@@ -66,15 +66,6 @@ export default class Login extends Component{
         });
     }
 
-    iniciarSesion(){
-        this.setState({
-            correo: this.state.correo,
-            password: this.state.password,
-            cargando: this.state.cargando,
-            sesionIniciada: true
-        });
-    }
-
     handleSubmit = (event) => {
         // console.log(event.target);
         this.setState({

@@ -9,14 +9,10 @@ export default class Home extends Component{
     render(){
         return (
             <div className="container-fluid">
-                <div className="row">
-                    <Header
-                    />
-                </div>
-                <div className="row">
-                    <Bienvenida
-                    />
-                </div>
+                <Header
+                />
+                <Bienvenida
+                />
             </div>
         );
     }
