@@ -29,12 +29,9 @@ export default class RequestService{
             return response.json()
         })
         .then(function(data){
-            console.log("correctooooooooooo");
-            console.log(data);
             correcto(data);
         }).catch(function(error){
             console.log("error");
-            console.log(error);
             incorrecto(error);
         })
         
