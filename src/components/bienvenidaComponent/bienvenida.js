@@ -2,8 +2,8 @@ import React, {Component} from 'react';
 
 export default class Bienvenida extends Component{
 
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
         this.paseadoresClick = this.paseadoresClick.bind(this);
     }
 
