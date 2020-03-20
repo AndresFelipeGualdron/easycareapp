@@ -15,6 +15,7 @@ export default ()=>(
             <Route path="/iniciarSesion" exact component={Login}/>
             <Route path="/registro" exact component={Registro}/>
             <Route path="/paseadores" exact component={PaseadoresRanking}/>
+            <Route path="/quieroPaseo" exact component={QuieroUnPaseo}/>
         </Switch>
     </Router>
 );

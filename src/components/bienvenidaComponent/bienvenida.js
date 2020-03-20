@@ -5,12 +5,18 @@ export default class Bienvenida extends Component{
     constructor(props){
         super(props);
         this.paseadoresClick = this.paseadoresClick.bind(this);
+        this.paseadoresClick = this.paseadoresClick.bind(this);
     }
 
     paseadoresClick = function(event){
         event.preventDefault();
         console.log("hola");
         window.location = "/paseadores";
+    }
+
+    quieroPaseoClick = function(event){
+        event.preventDefault();
+        window.location = "/quieroPaseo";
     }
 
     render(){
@@ -21,7 +27,7 @@ export default class Bienvenida extends Component{
                         <div className="col-md-12 col-lg-4">
                             <center>
                                 <img alt="perritos" src="/img/perrosInicio.PNG" className="img img-responsive col-lg-12" />
-                                <button className="btn btn-outline btn-light col-lg-12">!Quiero un paseo!</button>
+                                <button onClick = {this.quieroPaseoClick} className="btn btn-outline btn-light col-lg-12">!Quiero un paseo!</button>
                             </center>
                         </div>
                         <div className="col-md-12 col-lg-4">
