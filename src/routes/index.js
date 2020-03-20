@@ -5,6 +5,7 @@ import Login from '../components/loginComponent/login';
 import Registro from '../components/registroComponent/registro';
 import Home from '../components/homeComponent/home';
 import PaseadoresRanking from '../components/paseadoresRankingComponent/paseadoresRanking';
+import QuieroUnPaseo from "../components/quieroUnPaseoComponent/quieroUnPaseo";
 
 export default ()=>(
     
