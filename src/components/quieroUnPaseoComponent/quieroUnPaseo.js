@@ -5,6 +5,8 @@ import Row from "reactstrap/es/Row";
 import Col from "reactstrap/es/Col";
 import Header from "../headerComponent/header";
 
+import LoginService from '../../services/loginService';
+
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Image from "react-bootstrap/Image";
@@ -16,7 +18,40 @@ export default class QuieroUnPaseo extends Component {
         this.state = {};
         this.handle = this.handle.bind(this);
         this.handleChange = this.handleChange.bind(this);
+
+        this.verificarAutenticacion = this.verificarAutenticacion.bind(this);
+        this.validacionCorrecta = this.validacionCorrecta.bind(this);
+        this.validacionIncorrecta = this.validacionIncorrecta.bind(this);
+
+        this.verificarAutenticacion();
     }
+
+    //Verificar login
+
+    hadleChange(event){
+        this.setState({
+            [event.target.name] : event.target.value
+        });
+    }
+
+    verificarAutenticacion = function(e){
+        var servicio = new LoginService();
+        servicio.validate(this.validacionCorrecta,this.validacionIncorrecta);
+    }
+
+    validacionCorrecta = function(){
+        // this.setClaseBoton("oculto");
+        
+        
+    }
+
+    validacionIncorrecta = function(){
+        console.log("redireccionando...");
+        window.location="/iniciarSesion";
+        
+    }
+
+    //Fin verificar login
 
     handleChange = event => {
         this.setState({
