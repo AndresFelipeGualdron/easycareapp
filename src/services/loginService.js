@@ -56,4 +56,22 @@ export default class LoginService{
             incorrecto();
         });
     }
+
+    registrar = function(correo, password, nombre, cedula, telefono, correcto, incorrecto){
+        var init = {
+            method: "POST"
+        };
+
+        fetch(API_BASE_URL_BACK+"/clients/register/"+correo+"/"+password+"/"+nombre+"/"+cedula+"/"+telefono, init)
+        .then(function(response){
+            if(response.ok)  return response.text();
+            incorrecto(response);
+        })
+        .then(function(token){
+            correcto(token);
+        })
+        .catch(function(error){
+            incorrecto(error);
+        })
+    }
 }
