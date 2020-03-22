@@ -26,8 +26,12 @@ export default class Login extends Component{
         this.validacionCorrecta = this.validacionCorrecta.bind(this);
         this.validacionIncorrecta = this.validacionIncorrecta.bind(this);
 
-        this.verificarAutenticacion();
         
+        
+    }
+
+    componentWillMount = function(){
+        this.verificarAutenticacion();
     }
 
     //Verificar login

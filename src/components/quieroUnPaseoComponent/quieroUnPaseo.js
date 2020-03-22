@@ -26,6 +26,10 @@ export default class QuieroUnPaseo extends Component {
         this.verificarAutenticacion();
     }
 
+    componentWillMount = function(){
+        this.verificarAutenticacion();
+    }
+
     //Verificar login
 
     hadleChange(event){

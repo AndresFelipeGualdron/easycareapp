@@ -29,7 +29,9 @@ export default class Registro extends Component{
         this.registroCorrecto = this.registroCorrecto.bind(this);
         this.registroIncorrecto = this.registroIncorrecto.bind(this);
 
+    }
 
+    componentWillMount = function(){
         this.verificarAutenticacion();
     }
 

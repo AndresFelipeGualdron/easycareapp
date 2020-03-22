@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 
 import LoginService from '../../services/loginService';
+import RequestService from '../../services/requestService';
 import Header from '../headerComponent/header';
 
 export default class PaseadoresRanking extends Component{
@@ -15,8 +16,17 @@ export default class PaseadoresRanking extends Component{
         this.validacionCorrecta = this.validacionCorrecta.bind(this);
         this.validacionIncorrecta = this.validacionIncorrecta.bind(this);
 
-        this.verificarAutenticacion();
+        this.obtenerPaseadores = this.obtenerPaseadores.bind(this);
+        this.obtenerPaseadoresCorrecto = this.obtenerPaseadoresCorrecto.bind(this);
+        this.obtenerPaseadoresIncorrecto = this.obtenerPaseadoresIncorrecto.bind(this);
 
+        
+
+    }
+
+    componentWillMount = function(){
+        this.verificarAutenticacion();
+        this.obtenerPaseadores();
     }
 
     //Verificar login
@@ -49,15 +59,18 @@ export default class PaseadoresRanking extends Component{
     //PEDIR PASEADORES
 
     obtenerPaseadores = function(){
-
+        var request = new RequestService();
+        request.request(this.obtenerPaseadoresCorrecto ,this.obtenerPaseadoresIncorrecto , "GET","/paseadores/sort/DESC");
     }
 
     obtenerPaseadoresCorrecto = function(data){
-
+        this.setState({
+            paseadores : data
+        });
     }
 
     obtenerPaseadoresIncorrecto = function(error){
-
+        console.error(error);
     }
 
     //FIN PEDIR PASEADORES
@@ -72,27 +85,26 @@ export default class PaseadoresRanking extends Component{
                     <table className="table table-hover">
                         <thead>
                         <tr>
-                            <th>Firstname</th>
-                            <th>Lastname</th>
-                            <th>Email</th>
+                            <th>Nombre</th>
+                            <th>Calificación</th>
+                            <th>Teléfono</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>John</td>
-                            <td>Doe</td>
-                            <td>john@example.com</td>
-                        </tr>
-                        <tr>
-                            <td>Mary</td>
-                            <td>Moe</td>
-                            <td>mary@example.com</td>
-                        </tr>
-                        <tr>
-                            <td>July</td>
-                            <td>Dooley</td>
-                            <td>july@example.com</td>
-                        </tr>
+
+                            {this.state.paseadores.map(function(paseador, i){
+                            return <tr key={i}>
+                                        <td>
+                                            {paseador.nombre}
+                                        </td>
+                                        <td>
+                                            {paseador.calificacion}
+                                        </td>
+                                        <td>
+                                            {paseador.telefono}
+                                        </td>
+                                    </tr>;
+                            })}
                         </tbody>
                     </table>
                 </div>
