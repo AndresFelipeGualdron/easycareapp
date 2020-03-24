@@ -80,9 +80,9 @@ export default class QuieroUnPaseo extends Component {
 
     handle = event => {
         // let request = new RequestService();
-        //         // request.request(this.correctHandler, this.incorrectHandler, 'POST', '/mascotas/')
-        //         //
-        //         // event.preventDefault();
+        // request.request(this.correctHandler, this.incorrectHandler, 'POST', '/mascotas/')
+        //
+        // event.preventDefault();
 
     };
 
