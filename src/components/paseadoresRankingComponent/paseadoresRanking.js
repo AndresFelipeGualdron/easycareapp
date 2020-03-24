@@ -10,7 +10,7 @@ export default class PaseadoresRanking extends Component{
         super();
         this.state = {
             paseadores : []
-        }
+        };
 
         this.verificarAutenticacion = this.verificarAutenticacion.bind(this);
         this.validacionCorrecta = this.validacionCorrecta.bind(this);
@@ -24,7 +24,7 @@ export default class PaseadoresRanking extends Component{
 
     }
 
-    componentWillMount = function(){
+    componentDidMount(){
         this.verificarAutenticacion();
         this.obtenerPaseadores();
     }

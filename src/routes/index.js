@@ -5,7 +5,7 @@ import Login from '../components/loginComponent/login';
 import Registro from '../components/registroComponent/registro';
 import Home from '../components/homeComponent/home';
 import PaseadoresRanking from '../components/paseadoresRankingComponent/paseadoresRanking';
-import QuieroUnPaseo from "../components/quieroUnPaseoComponent/quieroUnPaseo";
+import PaseoMenu from "../components/quieroPaseoComponents/menuQuieroPaseo";
 
 export default ()=>(
     
@@ -15,7 +15,7 @@ export default ()=>(
             <Route path="/iniciarSesion" exact component={Login}/>
             <Route path="/registro" exact component={Registro}/>
             <Route path="/paseadores" exact component={PaseadoresRanking}/>
-            <Route path="/quieroPaseo" exact component={QuieroUnPaseo}/>
+            <Route path="/menuPaseo" exact component={PaseoMenu}/>
         </Switch>
     </Router>
 );

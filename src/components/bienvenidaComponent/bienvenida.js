@@ -16,7 +16,7 @@ export default class Bienvenida extends Component{
 
     quieroPaseoClick = function(event){
         event.preventDefault();
-        window.location = "/quieroPaseo";
+        window.location = "/menuPaseo";
     }
 
     render(){
