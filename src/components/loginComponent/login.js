@@ -87,9 +87,12 @@ export default class Login extends Component{
         var terminado = this.cerrarModal;
 
         var loginAceptado = function(token){
-            localStorage.setItem(ACCESS_TOKEN, token);
-            terminado();
-            window.location="/";
+            if(token !== undefined){
+                localStorage.setItem(ACCESS_TOKEN, token);
+                terminado();
+                window.location="/";
+            }
+            
         
         }
 
@@ -97,7 +100,6 @@ export default class Login extends Component{
             terminado();
             alert("login no aceptado");
         }
-
         new LoginService().login(this.state.correo,this.state.password, loginAceptado, loginRechazado, miInit);
 
         

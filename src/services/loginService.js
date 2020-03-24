@@ -24,12 +24,18 @@ export default class LoginService{
 
         fetch(API_BASE_URL_BACK+"/clients/login/"+correo+"/"+password,init)
         .then(function(response){
-            if(response.ok) return response.text();
-            callError();
+            if(response.ok){
+                return response.text();
+            }else{
+                callError();
+            }         
+            
         })
         .then((data) => {
             console.log(data);
             callSuccess(data);
+        }).catch((error) => {
+            callError(error);
         });
 
     }
