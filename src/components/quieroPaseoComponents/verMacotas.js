@@ -68,7 +68,9 @@ export default class VerMascotas extends Component {
     render() {
         return (
             <React.Fragment>
-                <Header/>
+                <div className='container'>
+                    <Header/>
+                </div>                
                 <Container>
                     <Row className='justify-content-center'>
                         <Col md={'auto'}>

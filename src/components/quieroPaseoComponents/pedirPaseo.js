@@ -2,8 +2,10 @@ import React, {Component} from "react";
 
 import Button from "react-bootstrap/Button";
 
+
 import Header from "../headerComponent/header";
 import Subasta from "../subastaComponent/subasta";
+import Mapa from '../mapaComponent/mapa';
 
 import RequestService from "../../services/requestService";
 
@@ -16,6 +18,9 @@ export default class PedirPaseo extends Component{
             mascotas : [],
             permitirPaseoOtrasMascotas : true,
             duracionPaseo : 0,
+            zoom :11,
+            miLat : 0,
+            miLng : 0 ,
             subastaIniciada : false
         };
 
@@ -29,15 +34,25 @@ export default class PedirPaseo extends Component{
         this.seleccionarPaseoSoloMisMascotas = this.seleccionarPaseoSoloMisMascotas.bind(this);
         this.cambiarTiempoPaseo = this.cambiarTiempoPaseo.bind(this);
         this.iniciarSubasta = this.iniciarSubasta.bind(this);
+        this.pedirLocation = this.pedirLocation.bind(this);
 
         this.pedirMascotas();
+        this.pedirLocation();        
 
+
+    }
+
+    componentWillMount(){
+        console.log("llamando metodos importantes");
+        this.pedirMascotas();
+        this.pedirLocation();
     }
 
     //Pedir mascotas
     pedirMascotas = function(){
         var request = new RequestService();
         request.request(this.pedirMascotasCorrecto, this.pedirMascotasIncorrecto, 'GET', '/clients/cliente/mascotas');
+        
     }
 
     pedirMascotasCorrecto = function(data){
@@ -50,6 +65,25 @@ export default class PedirPaseo extends Component{
     }
 
     //Fin pedir mascotas
+
+    //LOCALIZAR
+    pedirLocation = function(){
+        navigator.geolocation.getCurrentPosition(
+            position => {
+                console.log(position);
+                this.setState({
+                    miLat : position.coords.latitude,
+                    miLng : position.coords.longitude
+                });
+            },
+            error => {
+                console.error(error);
+            }
+        );
+
+    }
+
+    //FIN LOCALIZAR
 
     seleccionarMascota = function(mascota){
         var temp1 = this.state.mascotasSeleccionadas;
@@ -123,7 +157,9 @@ export default class PedirPaseo extends Component{
         }
         return (
             <React.Fragment>
-                <Header/>
+                <div className='container'>
+                    <Header/>
+                </div>                
                 <hr/>
                 <div className="container">
                     <div className="row justify-content-center">
@@ -137,7 +173,7 @@ export default class PedirPaseo extends Component{
                                     <button className="btn btn-secondary dropdown-toggle btn-block" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         Selecciona
                                     </button>
-                                    <div className="dropdown-menu" aria-labelledby="dropdownMenu2">
+                                    <div className="dropdown-menu btn-block" aria-labelledby="dropdownMenu2">
                                         {this.state.mascotas.map((mascota, id) => {
                                             return <button className="dropdown-item" type="button" onClick={() => this.seleccionarMascota(mascota)} key={id}>{mascota.nombre}</button>;
                                         })}
@@ -160,6 +196,7 @@ export default class PedirPaseo extends Component{
                                 <h5>¿Cuanto tiempo quieres que dure el paseo? (minutos):</h5>
                                 <input name="duracionPaseo" onChange={this.cambiarTiempoPaseo} type='number' placeholder='tiempo' className='form-control' />
                             </div>
+                            <Mapa lat={this.state.miLat} lng = {this.state.miLng} zoom = {this.state.zoom} />
                             <div className='form-group'>
                                 <button onClick={this.iniciarSubasta} type="button" className='btn btn-success' >Pedir paseo</button>
                             </div>

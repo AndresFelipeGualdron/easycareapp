@@ -100,7 +100,9 @@ export default class QuieroUnPaseo extends Component {
     render() {
         return (
             <React.Fragment>
-                <Header/>
+                <div className='container'>
+                    <Header/>
+                </div>                
                 <Container>
                     <br/><br/>
                     <Row className="justify-content-center">
