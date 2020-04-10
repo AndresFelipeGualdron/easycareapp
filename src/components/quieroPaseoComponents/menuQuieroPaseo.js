@@ -7,6 +7,7 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import QuieroUnPaseo from "./quieroUnPaseo";
 import VerMascotas from "./verMacotas";
+import PedirPaseo from "./pedirPaseo";
 import LoginService from "../../services/loginService";
 
 export default class PaseoMenu extends Component {
@@ -23,6 +24,9 @@ export default class PaseoMenu extends Component {
         this.validacionIncorrecta = this.validacionIncorrecta.bind(this);
 
         this.verificarAutenticacion();
+
+        this.pedirPaseo = this.pedirPaseo.bind(this);
+        this.setFlag = this.setFlag.bind(this);
 
     }
 
@@ -51,11 +55,29 @@ export default class PaseoMenu extends Component {
         this.setState({flag: 'verMascotas'});
     };
 
+    pedirPaseo = function(){
+        this.setState(
+            {
+                flag : 'pedirPaseo'
+            }
+        );
+    }
+
+    setFlag = function(f){
+        this.setState(
+            {
+                flag : f
+            }
+        );
+    }
+
     render() {
         if (this.state.flag === 'registrar') {
-            return <QuieroUnPaseo/>;
+            return <QuieroUnPaseo setFlag={this.setFlag}/>;
         }else if (this.state.flag === 'verMascotas') {
-            return <VerMascotas/>
+            return <VerMascotas setFlag={this.setFlag}/>;
+        }else if (this.state.flag === 'pedirPaseo'){
+            return <PedirPaseo setFlag={this.setFlag}/>;
         }
         return (
             <React.Fragment>
@@ -79,7 +101,7 @@ export default class PaseoMenu extends Component {
                                     <br/>
                                     <Button variant={'outline-secondary'} block>Actualizar una mascota</Button>
                                     <br/>
-                                    <Button variant={'outline-secondary'} block>Pedir un paseo</Button>
+                                    <Button onClick={this.pedirPaseo} variant={'outline-secondary'} block>Pedir un paseo</Button>
                                 </Card.Body>
                             </Card>
                         </Col>

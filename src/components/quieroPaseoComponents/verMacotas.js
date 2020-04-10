@@ -1,5 +1,4 @@
 import React, {Component} from "react";
-import PaseoMenu from "./menuQuieroPaseo";
 import Header from "../headerComponent/header";
 import {Container} from "react-bootstrap";
 import Row from "react-bootstrap/Row";
@@ -63,14 +62,10 @@ export default class VerMascotas extends Component {
     };
 
     volverAMenu = () => {
-        this.setState({flag: 'menu'});
+        this.props.setFlag("menu");
     };
 
     render() {
-        let misMascotas = this.state.mascotas;
-        if (this.state.flag === 'menu') {
-            return <PaseoMenu/>;
-        }
         return (
             <React.Fragment>
                 <Header/>

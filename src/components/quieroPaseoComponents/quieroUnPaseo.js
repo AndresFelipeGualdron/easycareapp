@@ -11,7 +11,6 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Image from "react-bootstrap/Image";
 import Card from "react-bootstrap/Card";
-import PaseoMenu from "./menuQuieroPaseo";
 import RequestService from "../../services/requestService";
 
 
@@ -95,13 +94,10 @@ export default class QuieroUnPaseo extends Component {
     }
 
     volverAMenu = () => {
-        this.setState({flag : 'menu'})
+        this.props.setFlag("menu");
     };
 
     render() {
-        if (this.state.flag === 'menu'){
-            return <PaseoMenu/>;
-        }
         return (
             <React.Fragment>
                 <Header/>
