@@ -21,6 +21,7 @@ export default class PedirPaseo extends Component{
             zoom :11,
             miLat : 0,
             miLng : 0 ,
+            permisoLocation : false,
             subastaIniciada : false
         };
 
@@ -78,6 +79,7 @@ export default class PedirPaseo extends Component{
             },
             error => {
                 console.error(error);
+                console.log("paila");
             }
         );
 

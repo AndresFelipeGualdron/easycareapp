@@ -30,6 +30,7 @@ export default class Mapa extends Component{
             <GoogleMapReact
                 bootstrapURLKeys={ {key : 'AIzaSyCqKmVbM7IdQY8obz9cTA6MpIAM2XWgVPs'} }
                 defaultCenter={{lat : this.props.lat, lng : this.props.lng}}
+                center={{lat : this.props.lat, lng : this.props.lng}}
                 defaultZoom={this.props.zoom}
                 >
                 <AnyReactComponent
