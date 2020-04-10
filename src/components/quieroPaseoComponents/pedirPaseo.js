@@ -1,13 +1,13 @@
 import React, {Component} from "react";
 
-import Button from "react-bootstrap/Button";
-
 
 import Header from "../headerComponent/header";
 import Subasta from "../subastaComponent/subasta";
 import Mapa from '../mapaComponent/mapa';
 
 import RequestService from "../../services/requestService";
+
+import './pedirPaseo.css';
 
 export default class PedirPaseo extends Component{
 
@@ -18,10 +18,12 @@ export default class PedirPaseo extends Component{
             mascotas : [],
             permitirPaseoOtrasMascotas : true,
             duracionPaseo : 0,
-            zoom :11,
+            zoom :15,
             miLat : 0,
             miLng : 0 ,
             permisoLocation : false,
+            locationMap : true,
+            direccion : "",
             subastaIniciada : false
         };
 
@@ -33,9 +35,10 @@ export default class PedirPaseo extends Component{
         this.seleccionarMascota = this.seleccionarMascota.bind(this);
         this.seleccionarPaseoMultiplesMascotas = this.seleccionarPaseoMultiplesMascotas.bind(this);
         this.seleccionarPaseoSoloMisMascotas = this.seleccionarPaseoSoloMisMascotas.bind(this);
-        this.cambiarTiempoPaseo = this.cambiarTiempoPaseo.bind(this);
+        this.cambiar = this.cambiar.bind(this);
         this.iniciarSubasta = this.iniciarSubasta.bind(this);
         this.pedirLocation = this.pedirLocation.bind(this);
+        this.changeLocationMap = this.changeLocationMap.bind(this);
 
         this.pedirMascotas();
         this.pedirLocation();        
@@ -74,10 +77,13 @@ export default class PedirPaseo extends Component{
                 console.log(position);
                 this.setState({
                     miLat : position.coords.latitude,
-                    miLng : position.coords.longitude
+                    miLng : position.coords.longitude,
+                    permisoLocation : true,
+                    precision : position.coords.accuracy
                 });
             },
             error => {
+                alert("Se necesitan permisos de Location.");
                 console.error(error);
                 console.log("paila");
             }
@@ -133,20 +139,28 @@ export default class PedirPaseo extends Component{
         });
     }
 
-    cambiarTiempoPaseo = function(event){
+    cambiar = function(event){
         this.setState({
             [event.target.name] : event.target.value
         });
     }
 
     iniciarSubasta = function(){
-        if(this.state.mascotasSeleccionadas.lenght === 0 || this.state.duracionPaseo === 0){
-            alert("Hay campos incorrectos en su solicitud");
-        }else{
-            this.setState({
-                subastaIniciada : true
-            });
+        if(this.state.miLat === 0) alert("debe dar permisos de location.");
+        else{
+            if(this.state.mascotasSeleccionadas.lenght === 0 || this.state.duracionPaseo === 0){
+                alert("Hay campos incorrectos en su solicitud, verifique que todos los campos esten llenos");
+            }else{
+                this.setState({
+                    subastaIniciada : true
+                });
+            }
         }
+        
+    }
+
+    changeLocationMap = function(flag){
+        this.setState({locationMap : flag});
     }
 
     volverMenu = function(){
@@ -155,7 +169,15 @@ export default class PedirPaseo extends Component{
 
     render(){
         if(this.state.subastaIniciada){
-            return <Subasta/>;
+            return <Subasta 
+            locationMap={this.state.locationMap}
+            direccion = {this.state.direccion}
+            lat = {this.state.miLat}
+            lng = {this.state.miLng}
+            permitirPaseoOtrasMascotas = {this.state.permitirPaseoOtrasMascotas}
+            mascotasSeleccionadas = {this.state.mascotasSeleccionadas}
+            duracionPaseo = {this.state.duracionPaseo}
+             />;
         }
         return (
             <React.Fragment>
@@ -196,18 +218,30 @@ export default class PedirPaseo extends Component{
                             </div>
                             <div className="form-group">
                                 <h5>¿Cuanto tiempo quieres que dure el paseo? (minutos):</h5>
-                                <input name="duracionPaseo" onChange={this.cambiarTiempoPaseo} type='number' placeholder='tiempo' className='form-control' />
+                                <input name="duracionPaseo" onChange={this.cambiar} type='number' placeholder='tiempo' className='form-control' />
                             </div>
-                            <Mapa lat={this.state.miLat} lng = {this.state.miLng} zoom = {this.state.zoom} />
+                            {(this.state.locationMap) ? (<Mapa click = {this.clickMapa} lat={this.state.miLat} lng = {this.state.miLng} zoom = {this.state.zoom} />) : ( 
+                            <input onChange={this.cambiar} className='form-control' placeholder='Dirección' /> 
+                            )}
+                            
+                            <div className='form-group'>
+                                <label>En que dirección deben recoger a sus mascotas?</label>
+                                <div className="dropdown">
+                                    <button className="btn btn-secondary dropdown-toggle btn-block" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Selecciona método de localización
+                                    </button>
+                                    <div className="dropdown-menu btn-block" aria-labelledby="dropdownMenu2">
+                                        <button type="button" className="dropdown-item" onClick={() => this.changeLocationMap(true)} >Mapa</button>
+                                        <button type="button" className="dropdown-item" onClick={() => this.changeLocationMap(false)} >Dirección</button>
+                                    </div>
+                                </div>
+                                                              
+                            </div>
                             <div className='form-group'>
                                 <button onClick={this.iniciarSubasta} type="button" className='btn btn-success' >Pedir paseo</button>
+                                <button className='btn btn-secondary' onClick={this.volverMenu}>Volver al menu</button>
                             </div>
                         </form>
-                    </div>
-                    <div className="row justify-content-center">
-                        <Button type={'button'} variant={'outline-warning'} onClick={this.volverMenu}>
-                            Volver al menu
-                        </Button>
                     </div>
                 </div>
                 

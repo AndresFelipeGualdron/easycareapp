@@ -4,7 +4,7 @@ import GoogleMapReact from 'google-map-react';
 
 
 
-const AnyReactComponent = ({ text }) => (
+const AnyReactComponent = ({ text, click }) => (
     <div style={{
       color: 'white', 
       background: 'grey',
@@ -14,11 +14,13 @@ const AnyReactComponent = ({ text }) => (
       alignItems: 'center',
       justifyContent: 'center',
       borderRadius: '100%',
-      transform: 'translate(-50%, -50%)'
+      transform: 'translate(-50%, -50%)',
+      onClick : click
     }}>
       {text}
     </div>
   );
+
 
 export default class Mapa extends Component{
 
@@ -29,7 +31,6 @@ export default class Mapa extends Component{
         return <React.Fragment>
             <GoogleMapReact
                 bootstrapURLKeys={ {key : 'AIzaSyCqKmVbM7IdQY8obz9cTA6MpIAM2XWgVPs'} }
-                defaultCenter={{lat : this.props.lat, lng : this.props.lng}}
                 center={{lat : this.props.lat, lng : this.props.lng}}
                 defaultZoom={this.props.zoom}
                 >
@@ -37,6 +38,7 @@ export default class Mapa extends Component{
                     lat={this.props.lat}
                     lng={this.props.lng}
                     text={"Me"}
+                    click = {this.props.click}
                 />
             </GoogleMapReact>
         </React.Fragment>

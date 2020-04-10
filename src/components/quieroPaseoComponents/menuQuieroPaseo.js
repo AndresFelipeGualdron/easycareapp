@@ -83,8 +83,7 @@ export default class PaseoMenu extends Component {
             <React.Fragment>
                 <div className='container'>
                     <Header/>
-                </div>
-                
+                </div>                
                 <br/>
                 <Container>
                     <Row className='justify-content-center'>
