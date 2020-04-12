@@ -22,58 +22,62 @@ export default class Subasta extends Component{
             numeroSubasta : null,
             stomp : null,
             socket : null,
-            flag : 'subasta'
+            flag : 'subasta',
             
         };
 
-        this.crearPaseo = this.crearPaseo.bind(this);
-        this.crearPaseoCorrecto = this.crearPaseoCorrecto.bind(this);
-        this.crearPaseoIncorrecto = this.crearPaseoIncorrecto.bind(this);
-        this.crearSubastaCorrecto = this.crearSubastaCorrecto.bind(this);
-        this.crearSubastaIncorrecto = this.crearSubastaIncorrecto.bind(this);
+        this.crearSubasta = this.crearSubasta.bind(this);
+        this.actualizarSubasta = this.actualizarSubasta.bind(this);
         this.conectar = this.conectar.bind(this);
         this.cancelarSubasta = this.cancelarSubasta.bind(this);
 
+    }
+
+    actualizarSubasta = function(subasta){
+        this.setState({
+            numeroSubasta : subasta.id
+        });
     }
 
     conectar = function(ws){
         this.setState({
             stomp : ws
         });
-        ws.subscribe("/topic/subasta."+this.state.numeroSubasta, function(eventbody){
+        var ac = this.actualizarSubasta;
+        ws.subscribe("/topic/subastas", function(eventbody){
             console.log(eventbody);
+            var object = JSON.parse(eventbody.body);
+            ac(object);
         });
+        this.crearSubasta();
     }
 
     //CREAR Subasta
 
-    crearPaseo = function(){
-        var request = new RequestService();
-        request.request(this.crearPaseoCorrecto, this.crearPaseoIncorrecto, 'POST', '/paseos/paseo/'+this.props.lat+'/'+this.props.lng);
-        
-
-    }
-
-    crearPaseoCorrecto = function(paseo){
-        console.log(paseo);
-        var request = new RequestService();
-        request.request(this.crearSubastaCorrecto, this.crearSubastaIncorrecto, 'POST', '/subastas/subasta/'+paseo.id+'/'+this.props.mascotasSeleccionadas.length+'/'+this.props.permitirPaseoOtrasMascotas);
-    }
-
-    crearPaseoIncorrecto = function(error){
-        console.error(error);
-    }
-
-    crearSubastaCorrecto = function(subasta){
-        console.log(subasta);
-        this.setState({
-            numeroSubasta : subasta.id
-        });
-        this.state.stomp.send("/app/nuevaSubasta."+this.state.numeroSubasta,{},JSON.stringify(subasta));
-    }
-
-    crearSubastaIncorrecto = function(error){
-
+    crearSubasta = function(){
+        var sb = {
+            id : 0,
+            oferta : 0,
+            creador : this.props.me,
+            idPaseo : {
+                id : 0,
+                ruta : {
+                    puntoPartida : '',
+                    puntoLlegada : ''
+                },
+                duracion : 0,
+                especificaciones : '',
+                precio : 0
+            },
+            numMascotas : this.props.mascotasSeleccionadas.length,
+            permitirMasMascotas : this.props.permitirPaseoOtrasMascotas
+        };
+        var enviar = {
+            subasta : sb,
+            latitud : this.props.lat,
+            longitud : this.props.lng,
+        };
+        this.state.stomp.send("/app/nuevaSubasta",{},JSON.stringify(enviar));
     }
 
     //FIN CREAR Subasta
@@ -85,7 +89,6 @@ export default class Subasta extends Component{
 
 
     componentWillMount(){
-        this.crearPaseo();
         var webSocket = new WebSocket();
         this.setState({
             socket : webSocket

@@ -25,7 +25,8 @@ export default class PedirPaseo extends Component{
             locationMap : true,
             direccion : "",
             paseo : null,
-            subastaIniciada : false
+            subastaIniciada : false,
+            me : null
         };
 
         this.volverMenu = this.volverMenu.bind(this);
@@ -41,6 +42,9 @@ export default class PedirPaseo extends Component{
         this.pedirLocation = this.pedirLocation.bind(this);
         this.changeLocationMap = this.changeLocationMap.bind(this);
         this.cerrarSubasta = this.cerrarSubasta.bind(this);
+        this.quienSoy = this.quienSoy.bind(this);
+        this.quienSoyCorrecto = this.quienSoyCorrecto.bind(this);
+        this.quienSoyIncorrecto = this.quienSoyIncorrecto.bind(this);
 
         this.pedirMascotas();
         this.pedirLocation();        
@@ -48,8 +52,29 @@ export default class PedirPaseo extends Component{
 
     }
 
+    //QUIEN SOY
+
+    quienSoy = function(){
+        var request = new RequestService();
+        request.request(this.quienSoyCorrecto, this.quienSoyIncorrecto, 'GET', '/clients/whoami');
+    }
+
+    quienSoyCorrecto = function(data){
+        console.log(data);
+        this.setState({
+            me : data.correo
+        });
+    }
+
+    quienSoyIncorrecto = function(error){
+
+    }
+
+    //FIN QUIEN SOY
+
     componentWillMount(){
         console.log("llamando metodos importantes");
+        this.quienSoy();
         this.pedirMascotas();
         this.pedirLocation();
     }
@@ -186,6 +211,7 @@ export default class PedirPaseo extends Component{
             mascotasSeleccionadas = {this.state.mascotasSeleccionadas}
             duracionPaseo = {this.state.duracionPaseo}
             backCerrarSubasta = {this.cerrarSubasta}
+            me = {this.state.me}
              />;
         }
         return (
