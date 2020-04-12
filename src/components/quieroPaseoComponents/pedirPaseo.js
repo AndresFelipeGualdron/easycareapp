@@ -24,6 +24,7 @@ export default class PedirPaseo extends Component{
             permisoLocation : false,
             locationMap : true,
             direccion : "",
+            paseo : null,
             subastaIniciada : false
         };
 
@@ -39,6 +40,7 @@ export default class PedirPaseo extends Component{
         this.iniciarSubasta = this.iniciarSubasta.bind(this);
         this.pedirLocation = this.pedirLocation.bind(this);
         this.changeLocationMap = this.changeLocationMap.bind(this);
+        this.cerrarSubasta = this.cerrarSubasta.bind(this);
 
         this.pedirMascotas();
         this.pedirLocation();        
@@ -159,6 +161,12 @@ export default class PedirPaseo extends Component{
         
     }
 
+    cerrarSubasta = function(){
+        this.setState({
+            subastaIniciada : false
+        });
+    }
+
     changeLocationMap = function(flag){
         this.setState({locationMap : flag});
     }
@@ -177,6 +185,7 @@ export default class PedirPaseo extends Component{
             permitirPaseoOtrasMascotas = {this.state.permitirPaseoOtrasMascotas}
             mascotasSeleccionadas = {this.state.mascotasSeleccionadas}
             duracionPaseo = {this.state.duracionPaseo}
+            backCerrarSubasta = {this.cerrarSubasta}
              />;
         }
         return (
