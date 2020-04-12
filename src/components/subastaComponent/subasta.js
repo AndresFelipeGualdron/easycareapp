@@ -3,7 +3,6 @@ import React, {Component} from "react";
 import { formatterPeso } from '../../formatos/money';
 
 import WebSocket from '../../services/webSocket';
-import RequestService from '../../services/requestService';
 
 import Header from '../headerComponent/header';
 import EstrellasRanking from '../estrellasRankingComponent/estrellasRanking';
@@ -23,6 +22,7 @@ export default class Subasta extends Component{
             stomp : null,
             socket : null,
             flag : 'subasta',
+            subasta : null
             
         };
 
@@ -30,12 +30,37 @@ export default class Subasta extends Component{
         this.actualizarSubasta = this.actualizarSubasta.bind(this);
         this.conectar = this.conectar.bind(this);
         this.cancelarSubasta = this.cancelarSubasta.bind(this);
+        this.eliminarPaseador = this.eliminarPaseador.bind(this);
+        this.agregarPaseador = this.agregarPaseador.bind(this);
 
     }
 
-    actualizarSubasta = function(subasta){
+    actualizarSubasta = function(sub){
+        console.log(sub);
         this.setState({
-            numeroSubasta : subasta.id
+            numeroSubasta : sub.id,
+            subasta : sub
+        });
+    }
+
+    agregarPaseador(paseador){
+        var arr = this.state.paseadores;
+        arr.push(paseador);
+        this.setState({
+            paseadores : arr
+        });
+    }
+
+    eliminarPaseador(paseador){
+        var arr = this.state.paseadores;
+        for(var i=0;i<arr.length;i++){
+            console.log();
+            if(arr[i].correo === paseador.correo){
+                arr.splice(i,1);
+            }
+        }
+        this.setState({
+            paseadores : arr
         });
     }
 
@@ -44,12 +69,28 @@ export default class Subasta extends Component{
             stomp : ws
         });
         var ac = this.actualizarSubasta;
+        var elim = this.eliminarPaseador;
+        var crear = this.crearSubasta;
+        var ag = this.agregarPaseador;
         ws.subscribe("/topic/subastas", function(eventbody){
             console.log(eventbody);
             var object = JSON.parse(eventbody.body);
+            var agr = ag;
+            var el = elim;
             ac(object);
+            ws.subscribe('/topic/subasta.'+object.id, function(eventbody2){
+                console.log(eventbody2);
+                var object = JSON.parse(eventbody2.body);
+                agr(object);
+            });
+            ws.subscribe("/topic/eliminarpaseador/subasta."+object.id, function(eventbody3){
+                var object = JSON.parse(eventbody3.body);
+                el(object);
+            });
         });
-        this.crearSubasta();
+        crear();
+        
+        
     }
 
     //CREAR Subasta
@@ -108,23 +149,13 @@ export default class Subasta extends Component{
                 <div className='row justify-content-center'>
                     <div className='col-md-6 col-sm-12 paseadoresSection'>
                         <center>
-                            <span className="badge badge-success">Andres Gualdron</span> <EstrellasRanking soloLectura={true} puntaje={3}/>
-                            <span className="badge badge-success">Andres Gualdron</span> <EstrellasRanking soloLectura={true} puntaje={3}/>
-                            <span className="badge badge-success">Andres Gualdron</span> <EstrellasRanking soloLectura={true} puntaje={3}/>
-                            <span className="badge badge-success">Andres Gualdron</span> <EstrellasRanking soloLectura={true} puntaje={3}/>
-                            <span className="badge badge-success">Andres Gualdron</span> <EstrellasRanking soloLectura={true} puntaje={3}/>
-                            <span className="badge badge-success">Andres Gualdron</span> <EstrellasRanking soloLectura={true} puntaje={3}/>
-                            <span className="badge badge-success">Andres Gualdron</span> <EstrellasRanking soloLectura={true} puntaje={3}/>
-                            <span className="badge badge-success">Andres Gualdron</span> <EstrellasRanking soloLectura={true} puntaje={3}/>
-                            <span className="badge badge-success">Andres Gualdron</span> <EstrellasRanking soloLectura={true} puntaje={3}/>
-                            <span className="badge badge-success">Andres Gualdron</span> <EstrellasRanking soloLectura={true} puntaje={3}/>
-                            <span className="badge badge-success">Andres Gualdron</span> <EstrellasRanking soloLectura={true} puntaje={3}/>
-                            <span className="badge badge-success">Andres Gualdron</span> <EstrellasRanking soloLectura={true} puntaje={3}/>
-                            <span className="badge badge-success">Andres Gualdron</span> <EstrellasRanking soloLectura={true} puntaje={3}/>
-                            <span className="badge badge-success">Andres Gualdron</span> <EstrellasRanking soloLectura={true} puntaje={3}/>
-                            <span className="badge badge-success">Andres Gualdron</span> <EstrellasRanking soloLectura={true} puntaje={3}/>
-                            <span className="badge badge-success">Andres Gualdron</span> <EstrellasRanking soloLectura={true} puntaje={3}/>
-                            <span className="badge badge-success">Andres Gualdron</span> <EstrellasRanking soloLectura={true} puntaje={3}/>
+                            {this.state.paseadores.map((paseador, i) => {
+                                return (
+                                    <React.Fragment key={i}>
+                                        <span className="badge badge-success">{paseador.nombre}</span> <EstrellasRanking soloLectura={true} puntaje={paseador.calificacion}/>
+                                    </React.Fragment>
+                                );
+                            })}
                         </center>
                     </div>
                     <div className='col-md-6 col-sm-12 eventosSection'>
@@ -132,8 +163,7 @@ export default class Subasta extends Component{
                             <span className="badge badge-success">Andres Gualdron</span> OFRECIÓ <b><i>{formatterPeso.format(50000)} </i></b>
                             <button className='btn btn-success btn-sm ' >Aceptar oferta</button>
                             <EstrellasRanking soloLectura={true} puntaje={3}/>
-                        </div>
-                        
+                        </div>                        
                     </div>
                 </div>
             </div>
