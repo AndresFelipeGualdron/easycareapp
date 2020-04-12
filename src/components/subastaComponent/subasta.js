@@ -6,8 +6,10 @@ import WebSocket from '../../services/webSocket';
 
 import Header from '../headerComponent/header';
 import EstrellasRanking from '../estrellasRankingComponent/estrellasRanking';
+import paseoEnCurso from '../paseoEnCursoComponent/paseoEnCurso';
 
 import './subasta.css';
+import PaseoEnCurso from "../paseoEnCursoComponent/paseoEnCurso";
 
 export default class Subasta extends Component{
 
@@ -22,7 +24,8 @@ export default class Subasta extends Component{
             stomp : null,
             socket : null,
             flag : 'subasta',
-            subasta : null
+            subasta : null,
+            paseadorSeleccionado : null
             
         };
 
@@ -32,6 +35,9 @@ export default class Subasta extends Component{
         this.cancelarSubasta = this.cancelarSubasta.bind(this);
         this.eliminarPaseador = this.eliminarPaseador.bind(this);
         this.agregarPaseador = this.agregarPaseador.bind(this);
+        this.agregarOferta = this.agregarOferta.bind(this);
+        this.aceptarOferta = this.aceptarOferta.bind(this);
+        this.estaPaseador = this.estaPaseador.bind(this);
 
     }
 
@@ -64,6 +70,14 @@ export default class Subasta extends Component{
         });
     }
 
+    agregarOferta = function(oferta){
+        var arr = this.state.ofertas;
+        arr.push(oferta);
+        this.setState({
+            ofertas : arr
+        });
+    }
+
     conectar = function(ws){
         this.setState({
             stomp : ws
@@ -72,11 +86,13 @@ export default class Subasta extends Component{
         var elim = this.eliminarPaseador;
         var crear = this.crearSubasta;
         var ag = this.agregarPaseador;
+        var agof = this.agregarOferta;
         ws.subscribe("/topic/subastas", function(eventbody){
             console.log(eventbody);
             var object = JSON.parse(eventbody.body);
             var agr = ag;
             var el = elim;
+            var ofag = agof;
             ac(object);
             ws.subscribe('/topic/subasta.'+object.id, function(eventbody2){
                 console.log(eventbody2);
@@ -87,6 +103,10 @@ export default class Subasta extends Component{
                 var object = JSON.parse(eventbody3.body);
                 el(object);
             });
+            ws.subscribe("/topic/agregaroferta/subasta."+object.id,function(eventbody4){
+                var object = JSON.parse(eventbody4.body);
+                ofag(object);
+            })
         });
         crear();
         
@@ -96,6 +116,7 @@ export default class Subasta extends Component{
     //CREAR Subasta
 
     crearSubasta = function(){
+        console.log(this.props.permitirPaseoOtrasMascotas);
         var sb = {
             id : 0,
             oferta : 0,
@@ -128,6 +149,30 @@ export default class Subasta extends Component{
         this.state.stomp.send("/app/cerrarSubasta."+this.state.numeroSubasta,{},{});
     }
 
+    estaPaseador = function(paseador){
+        var flag = false;
+        console.log(paseador);
+        this.state.paseadores.forEach(pas => {
+            if(paseador.correo === pas.correo){
+                flag = true;
+            }
+        });
+        return flag;
+    }
+
+    aceptarOferta = function(oferta){
+        if(this.estaPaseador(oferta.ofertor)){
+            console.log(oferta);
+            this.setState({
+                paseadorSeleccionado : oferta.ofertor,
+                flag : "paseoEnCurso"
+            });
+        }else{
+            alert("El paseador ya no etá en la subasta");
+        }
+        
+    }
+
 
     componentWillMount(){
         var webSocket = new WebSocket();
@@ -139,6 +184,19 @@ export default class Subasta extends Component{
 
 
     render(){
+        if(this.state.flag === 'paseoEnCurso'){
+            return < PaseoEnCurso 
+            paseadorSeleccionado = {this.state.paseadorSeleccionado}
+            locationMap={this.props.locationMap}
+            direccion = {this.props.direccion}
+            lat = {this.props.miLat}
+            lng = {this.props.miLng}
+            permitirPaseoOtrasMascotas = {this.props.permitirPaseoOtrasMascotas}
+            mascotasSeleccionadas = {this.props.mascotasSeleccionadas}
+            duracionPaseo = {this.props.duracionPaseo}
+            me = {this.props.me}
+            />
+        }
         return <React.Fragment>
             <div className='container'>
                 <Header/>
@@ -160,9 +218,15 @@ export default class Subasta extends Component{
                     </div>
                     <div className='col-md-6 col-sm-12 eventosSection'>
                         <div className='col-sm-12 eventoSection'>
-                            <span className="badge badge-success">Andres Gualdron</span> OFRECIÓ <b><i>{formatterPeso.format(50000)} </i></b>
-                            <button className='btn btn-success btn-sm ' >Aceptar oferta</button>
-                            <EstrellasRanking soloLectura={true} puntaje={3}/>
+                            {this.state.ofertas.map((ofer, i) => {
+                                return (
+                                    <React.Fragment key={i}>
+                                        <span className="badge badge-success">{ofer.ofertor.nombre}</span> OFRECIÓ <b><i>{formatterPeso.format(ofer.oferta)} </i></b>
+                                        <button onClick={() => {this.aceptarOferta(ofer)}} className='btn btn-success btn-sm ' >Aceptar oferta</button>
+                                        <EstrellasRanking soloLectura={true} puntaje={ofer.ofertor.calificacion}/>
+                                    </React.Fragment>
+                                );
+                            })}
                         </div>                        
                     </div>
                 </div>
