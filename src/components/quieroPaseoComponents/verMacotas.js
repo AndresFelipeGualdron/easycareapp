@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import Header from "../headerComponent/header";
-import {Container} from "react-bootstrap";
+import {ButtonGroup, Container} from "react-bootstrap";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
@@ -13,7 +13,7 @@ export default class VerMascotas extends Component {
         super(props);
         this.state = {
             flag: 'misMascotas',
-            mascotas: []
+            mascotas: [],
         };
         this.volverAMenu = this.volverAMenu.bind(this);
 
@@ -25,12 +25,17 @@ export default class VerMascotas extends Component {
         this.validacionIncorrecta = this.validacionIncorrecta.bind(this);
 
         this.verificarAutenticacion();
+
+        this.editarMascota = this.editarMascota.bind(this);
+        this.eliminarMascota = this.eliminarMascota.bind(this);
+
+        this.clienteCorrecto = this.clienteCorrecto.bind(this);
     }
 
     componentDidMount() {
         let request = new RequestService();
         request.request(this.correcto, this.incorrecto, 'GET', '/clients/cliente/mascotas');
-        console.log(this.state.mascotas)
+        request.request(this.clienteCorrecto, this.incorrecto, 'GET', '/clients/cliente/correo');
     }
 
     //Verificar login
@@ -61,9 +66,26 @@ export default class VerMascotas extends Component {
         console.error(error);
     };
 
+    clienteCorrecto(data){
+        this.setState({cliente:data});
+    }
+
     volverAMenu = () => {
         this.props.setFlag("menu");
     };
+
+    editarMascota(pet){
+        pet.cliente = this.state.cliente;
+        this.props.setMascota(pet);
+        this.props.setFlag('registrar');
+    }
+
+    async eliminarMascota(pet){
+        let request = new RequestService();
+        await request.request(() => {}, () => {}, 'DELETE','/mascotas/mascota/'+pet.id)
+        let updatedPets = [...this.state.mascotas].filter(i => i.id !== pet.id);
+        this.setState({mascotas:updatedPets});
+    }
 
     render() {
         return (
@@ -87,6 +109,7 @@ export default class VerMascotas extends Component {
                                     <th>Raza</th>
                                     <th>Edad</th>
                                     <th>Género</th>
+                                    <th>Acción</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -96,6 +119,12 @@ export default class VerMascotas extends Component {
                                         <td>{mascota.raza}</td>
                                         <td>{mascota.edad}</td>
                                         <td>{mascota.genero}</td>
+                                        <td>
+                                            <ButtonGroup>
+                                                <Button variant="primary" onClick={() => this.editarMascota(mascota)}>Editar</Button>
+                                                <Button variant="danger" onClick={() => this.eliminarMascota(mascota)}>Eliminar</Button>
+                                            </ButtonGroup>
+                                        </td>
                                     </tr>;
                                 })}
                                 </tbody>
