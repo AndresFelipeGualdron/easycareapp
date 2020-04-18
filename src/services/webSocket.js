@@ -13,9 +13,9 @@ export default class WebSocket{
         this.ws = Stomp.over(this.socket);
     }
     
-    connectAndSubscribe = function(conectar){
+    connectAndSubscribe = function(conectar, headers){
         var ww = this.ws;
-        this.ws.connect({}, function(frame){
+        this.ws.connect(headers, function(frame){
             conectar(ww);
         });
     }

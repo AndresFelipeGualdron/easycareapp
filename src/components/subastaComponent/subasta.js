@@ -24,8 +24,7 @@ export default class Subasta extends Component{
             stomp : null,
             socket : null,
             flag : 'subasta',
-            subasta : null,
-            paseadorSeleccionado : null
+            subasta : null
             
         };
 
@@ -87,6 +86,7 @@ export default class Subasta extends Component{
         var crear = this.crearSubasta;
         var ag = this.agregarPaseador;
         var agof = this.agregarOferta;
+        var usuario = this.props.me;
         ws.subscribe("/topic/subastas", function(eventbody){
             console.log(eventbody);
             var object = JSON.parse(eventbody.body);
@@ -99,6 +99,14 @@ export default class Subasta extends Component{
                 var object = JSON.parse(eventbody2.body);
                 agr(object);
             });
+            ws.subscribe('/app/subasta/'+object.id+'/'+usuario, function(eventbody2){
+                console.log(eventbody2);
+                var object = JSON.parse(eventbody2.body);
+                agr(object);
+            });
+            ws.subscribe('/user/queue/subasta',function(eventbody){
+                console.log(eventbody);
+            },{user : usuario});
             ws.subscribe("/topic/eliminarpaseador/subasta."+object.id, function(eventbody3){
                 var object = JSON.parse(eventbody3.body);
                 el(object);
@@ -177,9 +185,9 @@ export default class Subasta extends Component{
     componentWillMount(){
         var webSocket = new WebSocket();
         this.setState({
-            socket : webSocket
+            socket : webSocket,
         });
-        webSocket.connectAndSubscribe(this.conectar);
+        webSocket.connectAndSubscribe(this.conectar, {user : this.props.me});
     }
 
 
