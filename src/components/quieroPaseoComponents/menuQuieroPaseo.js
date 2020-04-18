@@ -14,7 +14,8 @@ export default class PaseoMenu extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            flag: 'menu'
+            flag: 'menu',
+            mascota: null
         };
         this.registrar = this.registrar.bind(this);
         this.verMascotas = this.verMascotas.bind(this);
@@ -27,6 +28,8 @@ export default class PaseoMenu extends Component {
 
         this.pedirPaseo = this.pedirPaseo.bind(this);
         this.setFlag = this.setFlag.bind(this);
+        this.setMascota = this.setMascota.bind(this);
+        this.getMascota = this.getMascota.bind(this);
 
     }
 
@@ -43,7 +46,7 @@ export default class PaseoMenu extends Component {
 
     validacionIncorrecta = () => {
         console.log("redireccionando...");
-        window.location="/iniciarSesion";
+        window.location = "/iniciarSesion";
 
     };
 
@@ -55,35 +58,46 @@ export default class PaseoMenu extends Component {
         this.setState({flag: 'verMascotas'});
     };
 
-    pedirPaseo = function(){
+    pedirPaseo = function () {
         this.setState(
             {
-                flag : 'pedirPaseo'
+                flag: 'pedirPaseo'
             }
         );
     }
 
-    setFlag = function(f){
+    setFlag = function (f) {
         this.setState(
             {
-                flag : f
+                flag: f
             }
         );
     }
+
+    setMascota(mas) {
+        this.setState({
+            mascota : mas
+        });
+    }
+
+    getMascota(){
+        return this.state.mascota;
+    }
+
 
     render() {
         if (this.state.flag === 'registrar') {
-            return <QuieroUnPaseo setFlag={this.setFlag}/>;
-        }else if (this.state.flag === 'verMascotas') {
-            return <VerMascotas setFlag={this.setFlag}/>;
-        }else if (this.state.flag === 'pedirPaseo'){
+            return <QuieroUnPaseo setFlag={this.setFlag} setMascota={this.setMascota} getMascota={this.getMascota}/>;
+        } else if (this.state.flag === 'verMascotas') {
+            return <VerMascotas setFlag={this.setFlag} setMascota={this.setMascota} getMascota={this.getMascota}/>;
+        } else if (this.state.flag === 'pedirPaseo') {
             return <PedirPaseo setFlag={this.setFlag}/>;
         }
         return (
             <React.Fragment>
                 <div className='container'>
                     <Header/>
-                </div>                
+                </div>
                 <br/>
                 <Container>
                     <Row className='justify-content-center'>
@@ -92,7 +106,8 @@ export default class PaseoMenu extends Component {
                                 <Card.Img variant='top' src='/img/cachorritos.PNG'/>
                                 <Card.Header><h2>Menú de opciones</h2></Card.Header>
                                 <Card.Body>
-                                    <Button type={'button'} variant={'outline-secondary'} block onClick={this.verMascotas}>
+                                    <Button type={'button'} variant={'outline-secondary'} block
+                                            onClick={this.verMascotas}>
                                         Consultar mis mascotas
                                     </Button>
                                     <br/>
@@ -103,7 +118,8 @@ export default class PaseoMenu extends Component {
                                     <br/>
                                     <Button variant={'outline-secondary'} block>Actualizar una mascota</Button>
                                     <br/>
-                                    <Button onClick={this.pedirPaseo} variant={'outline-secondary'} block>Pedir un paseo</Button>
+                                    <Button onClick={this.pedirPaseo} variant={'outline-secondary'} block>Pedir un
+                                        paseo</Button>
                                 </Card.Body>
                             </Card>
                         </Col>

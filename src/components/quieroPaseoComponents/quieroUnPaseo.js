@@ -15,10 +15,20 @@ import RequestService from "../../services/requestService";
 
 
 export default class QuieroUnPaseo extends Component {
+
+    emptyPet = {
+        nombre : '',
+        Raza : '',
+        Edad : '',
+        genero : ''
+    }
+
     constructor(props) {
         super(props);
         this.state = {
-            flag : 'registro'
+            flag : 'registro',
+            client:null,
+            pet : this.emptyPet
         };
         this.handle = this.handle.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -28,29 +38,25 @@ export default class QuieroUnPaseo extends Component {
         this.validacionIncorrecta = this.validacionIncorrecta.bind(this);
         this.volverAMenu = this.volverAMenu.bind(this);
 
+        this.correcto = this.correcto.bind(this);
+        this.incorrecto = this.incorrecto.bind(this);
+
         this.verificarAutenticacion();
-
-        this.clienteCorrecto = this.clienteCorrecto.bind(this);
-        this.clienteIncorrecto = this.clienteIncorrecto.bind(this);
-
-        this.correctHandler = this.correctHandler.bind(this);
-        this.incorrectHandler = this.incorrectHandler.bind(this);
     }
 
     componentDidMount() {
-        let clienteService = new RequestService();
-        clienteService.request(this.clienteCorrecto, this.clienteIncorrecto,'GET', '/clients/cliente/correo');
+        let request = new RequestService();
+        request.request(this.correcto, this.incorrecto, 'GET', '/clients/cliente/correo');
     }
 
-    clienteCorrecto = data => {
-        this.setState({
-            cliente : data
-        })
-    };
+    correcto = data => {
+        this.setState({client:data});
+        console.log(this.state.client);
+    }
 
-    clienteIncorrecto = error => {
+    incorrecto = error => {
         console.error(error);
-    };
+    }
 
     //Verificar login
 
@@ -72,26 +78,30 @@ export default class QuieroUnPaseo extends Component {
     //Fin verificar login
 
     handleChange = event => {
-        this.setState({
-            [event.target.name]: event.target.value
-        });
+        const name = event.target.name;
+        let pet = {...this.state.pet};
+        pet[name] = event.target.value;
+        this.setState({pet});
     };
 
-    handle = event => {
-        // let request = new RequestService();
-        // request.request(this.correctHandler, this.incorrectHandler, 'POST', '/mascotas/')
-        //
-        // event.preventDefault();
-
+    async handle(){
+        const client = this.state.client;
+        const pet = this.state.pet;
+        const petLog = {
+            nombre : pet.nombre,
+            raza : pet.Raza,
+            edad : pet.Edad,
+            genero : pet.genero,
+            cliente : client
+        }
+        let request = new RequestService();
+        if(this.props.getMascota()){
+            await request.request(() => {}, () => {}, 'PUT', '/mascotas/mascota', petLog);
+            this.props.setMascota(null);
+        }else {
+            await request.request(() => {}, () => {}, 'POST', '/mascotas', petLog);
+        }
     };
-
-    correctHandler = () => {
-        console.info();
-    };
-
-    incorrectHandler = error => {
-        console.error(error);
-    }
 
     volverAMenu = () => {
         this.props.setFlag("menu");
@@ -110,7 +120,7 @@ export default class QuieroUnPaseo extends Component {
                             <Card style={{width: '33rem'}} className="text-center" bg={"light"}>
                                 <Card.Header><h3>Registra tu perrito</h3></Card.Header>
                                 <br/><br/>
-                                <Form onSubmit={this.handle}>
+                                <Form>
                                     <Form.Group as={Row} className="justify-content-center">
                                         <Form.Label column sm={2}> Nombre: </Form.Label>
                                         <Col sm={6}>
@@ -141,11 +151,11 @@ export default class QuieroUnPaseo extends Component {
                                     <Form.Group as={Row} className="justify-content-center">
                                         <Form.Label column sm={2}>Género:</Form.Label>
                                         <Col sm={6}> <Form.Control onChange={this.handleChange} type="text" placeholder="Género"
-                                                                   name={"genero"} onClick={this.registrarMascota}/> </Col>
+                                                                   name={"genero"}/> </Col>
                                     </Form.Group>
                                     <br/>
                                     <Form.Group as={Row} className="justify-content-center">
-                                        <Col sm={"auto"}> <Button variant={"light"} type="submit">Siguiente</Button> </Col>
+                                        <Col sm={"auto"}> <Button variant={"light"} type="button" onClick={this.handle}>Aceptar</Button> </Col>
                                     </Form.Group>
                                 </Form>
                             </Card>
