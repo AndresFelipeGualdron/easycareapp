@@ -3,11 +3,14 @@ import React, {Component} from "react";
 
 import Header from "../headerComponent/header";
 import Subasta from "../subastaComponent/subasta";
-import Mapa from '../mapaComponent/mapa';
+import Mapa from '../mapaComponent/mapaIndex';
 
 import RequestService from "../../services/requestService";
 
 import './pedirPaseo.css';
+import { withScriptjs } from "react-google-maps";
+
+const MapLoader = withScriptjs(Mapa);
 
 export default class PedirPaseo extends Component{
 
@@ -26,7 +29,7 @@ export default class PedirPaseo extends Component{
             direccion : "",
             paseo : null,
             subastaIniciada : false,
-            me : null
+            me : null,
         };
 
         this.volverMenu = this.volverMenu.bind(this);
@@ -47,10 +50,12 @@ export default class PedirPaseo extends Component{
         this.quienSoyIncorrecto = this.quienSoyIncorrecto.bind(this);
 
         this.pedirMascotas();
-        this.pedirLocation();        
+        this.pedirLocation();
 
 
     }
+
+    
 
     //QUIEN SOY
 
@@ -62,7 +67,7 @@ export default class PedirPaseo extends Component{
     quienSoyCorrecto = function(data){
         console.log(data);
         this.setState({
-            me : data.correo
+            me : data
         });
     }
 
@@ -255,7 +260,19 @@ export default class PedirPaseo extends Component{
                                 <h5>¿Cuanto tiempo quieres que dure el paseo? (minutos):</h5>
                                 <input name="duracionPaseo" onChange={this.cambiar} type='number' placeholder='tiempo' className='form-control' />
                             </div>
-                            {(this.state.locationMap) ? (<Mapa click = {this.clickMapa} lat={this.state.miLat} lng = {this.state.miLng} zoom = {this.state.zoom} />) : ( 
+                            {(this.state.locationMap) ? (<MapLoader 
+                            // click = {this.clickMapa} 
+                            // lat={this.state.miLat} 
+                            // lng = {this.state.miLng} 
+                            zoom = {this.state.zoom} 
+                            markers = {[{lat : this.state.miLat, lng :this.state.miLng, label : "me"}]}
+                            // ruta = {{origin : {lat : this.state.miLat, lng : this.state.miLng}, destino : {lat : this.state.miLat, lng : this.state.miLng}}}
+                            googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyCqKmVbM7IdQY8obz9cTA6MpIAM2XWgVPs&libraries=geometry,drawing,places"
+                            loadingElement={<div style={{ height: `100%` }} />}
+                            containerElement={<div style={{ height: `700px` }} />}
+                            mapElement={<div style={{ height: `100%` }} />}
+                            center= {{lat : this.state.miLat, lng : this.state.miLng}}
+                            />) : ( 
                             <input onChange={this.cambiar} className='form-control' placeholder='Dirección' /> 
                             )}
                             

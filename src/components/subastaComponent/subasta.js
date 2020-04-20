@@ -104,9 +104,6 @@ export default class Subasta extends Component{
                 var object = JSON.parse(eventbody2.body);
                 agr(object);
             });
-            ws.subscribe('/user/queue/subasta',function(eventbody){
-                console.log(eventbody);
-            },{user : usuario});
             ws.subscribe("/topic/eliminarpaseador/subasta."+object.id, function(eventbody3){
                 var object = JSON.parse(eventbody3.body);
                 el(object);
@@ -197,12 +194,14 @@ export default class Subasta extends Component{
             paseadorSeleccionado = {this.state.paseadorSeleccionado}
             locationMap={this.props.locationMap}
             direccion = {this.props.direccion}
-            lat = {this.props.miLat}
-            lng = {this.props.miLng}
+            lat = {this.props.lat}
+            lng = {this.props.lng}
             permitirPaseoOtrasMascotas = {this.props.permitirPaseoOtrasMascotas}
             mascotasSeleccionadas = {this.props.mascotasSeleccionadas}
             duracionPaseo = {this.props.duracionPaseo}
             me = {this.props.me}
+            stomp = {this.state.stomp}
+            numeroSubasta = {this.state.numeroSubasta}
             />
         }
         return <React.Fragment>
