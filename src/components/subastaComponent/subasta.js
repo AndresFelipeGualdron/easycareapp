@@ -3,10 +3,10 @@ import React, {Component} from "react";
 import { formatterPeso } from '../../formatos/money';
 
 import WebSocket from '../../services/webSocket';
+import RequestService from '../../services/requestService';
 
 import Header from '../headerComponent/header';
 import EstrellasRanking from '../estrellasRankingComponent/estrellasRanking';
-import paseoEnCurso from '../paseoEnCursoComponent/paseoEnCurso';
 
 import './subasta.css';
 import PaseoEnCurso from "../paseoEnCursoComponent/paseoEnCurso";
@@ -37,7 +37,16 @@ export default class Subasta extends Component{
         this.agregarOferta = this.agregarOferta.bind(this);
         this.aceptarOferta = this.aceptarOferta.bind(this);
         this.estaPaseador = this.estaPaseador.bind(this);
+        this.setPaseadorSeleccionado = this.setPaseadorSeleccionado.bind(this);
+        this.actualizarSubastaCorrecto = this.actualizarSubastaCorrecto.bind(this);
+        this.actualizarSubastaIncorrecto = this.actualizarSubastaIncorrecto.bind(this);
 
+    }
+
+    setPaseadorSeleccionado = function(paseador){
+        this.setState({
+            paseadorSeleccionado : paseador
+        });
     }
 
     actualizarSubasta = function(sub){
@@ -126,14 +135,14 @@ export default class Subasta extends Component{
             id : 0,
             oferta : 0,
             creador : this.props.me,
-            idPaseo : {
+            paseo : {
                 id : 0,
                 ruta : {
                     puntoPartida : '',
                     puntoLlegada : ''
                 },
-                duracion : 0,
-                especificaciones : '',
+                duracion : this.props.duracionPaseo,
+                especificaciones : (this.props.permitirPaseoOtrasMascotas) ? 'Se permite paseo con otras mascotas' : 'No se permite paseo con otras mascotas',
                 precio : 0
             },
             numMascotas : this.props.mascotasSeleccionadas.length,
@@ -165,8 +174,23 @@ export default class Subasta extends Component{
         return flag;
     }
 
+    actualizarSubastaCorrecto = function(data){
+        this.setState({
+            subasta : data
+        });
+    }
+
+    actualizarSubastaIncorrecto = function(error){
+
+    }
+
     aceptarOferta = function(oferta){
         if(this.estaPaseador(oferta.ofertor)){
+            var sb = this.state.subasta;
+            sb.paseo.precio = oferta.oferta;
+            var request = new RequestService();
+            console.log(sb);
+            request.request(this.actualizarSubastaCorrecto, this.actualizarSubastaIncorrecto, 'PUT', '/subastas/actualizar', sb);
             console.log(oferta);
             this.setState({
                 paseadorSeleccionado : oferta.ofertor,
@@ -202,6 +226,8 @@ export default class Subasta extends Component{
             me = {this.props.me}
             stomp = {this.state.stomp}
             numeroSubasta = {this.state.numeroSubasta}
+            actualizarUbicacion = {this.props.actualizarUbicacion}
+            setPaseadorSeleccionado = {this.setPaseadorSeleccionado}
             />
         }
         return <React.Fragment>

@@ -21,8 +21,8 @@ export default class Mapa extends Component{
       console.log(this.props.markers);
       const directionsService = new window.google.maps.DirectionsService();
   
-      const origin = { lat: this.props.lat, lng: this.props.lng };
-      const destination = { lat: this.props.center.lat, lng: this.props.center.lng };
+      const origin = { lat: this.props.ruta.origin.lat, lng: this.props.ruta.origin.lng };
+      const destination = { lat: this.props.ruta.destino.lat, lng: this.props.ruta.destino.lng };
   
       directionsService.route(
         {

@@ -48,11 +48,33 @@ export default class PedirPaseo extends Component{
         this.quienSoy = this.quienSoy.bind(this);
         this.quienSoyCorrecto = this.quienSoyCorrecto.bind(this);
         this.quienSoyIncorrecto = this.quienSoyIncorrecto.bind(this);
+        this.actualizarUbicacion = this.actualizarUbicacion.bind(this);
 
         this.pedirMascotas();
         this.pedirLocation();
 
 
+    }
+
+    actualizarUbicacion = function(){
+        navigator.geolocation.getCurrentPosition(
+            position => {
+                console.log(position);
+                if(this.state.miLat !== position.coords.latitude || this.state.miLng!== position.coords.longitude ){
+                    this.setState({
+                        miLat : position.coords.latitude,
+                        miLng : position.coords.longitude,
+                        precision : position.coords.accuracy
+                    });
+                }
+                
+            },
+            error => {
+                alert("Se necesitan permisos de Location.");
+                console.error(error);
+                console.log("paila");
+            }
+        );
     }
 
     
@@ -217,6 +239,7 @@ export default class PedirPaseo extends Component{
             duracionPaseo = {this.state.duracionPaseo}
             backCerrarSubasta = {this.cerrarSubasta}
             me = {this.state.me}
+            actualizarUbicacion = {this.actualizarUbicacion}
              />;
         }
         return (

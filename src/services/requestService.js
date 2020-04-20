@@ -34,9 +34,9 @@ export default class RequestService {
             .then(response => {
                 if (metodo === 'PUT' || metodo === 'POST' || metodo === 'DELETE'){
                     if(response.ok){
-                        console.log('Petición aceptada');
+                        return response.json();
                     }else{
-                        console.log('Petición fallida');
+                        return null;
                     }
                 }else{
                     if (response.ok) {
