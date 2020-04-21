@@ -60,7 +60,7 @@ export default class PaseoEnCurso extends Component{
             var object = JSON.parse(eventbody.body);
             cancelar();
         })
-        setInterval(this.actualizarUbicacion,1000);
+        setInterval(this.actualizarUbicacion,10000);
 
     }
 
