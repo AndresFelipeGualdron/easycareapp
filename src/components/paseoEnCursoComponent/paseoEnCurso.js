@@ -32,7 +32,7 @@ export default class PaseoEnCurso extends Component{
         console.log("actualizando ubicacion");
         this.props.actualizarUbicacion();
         console.log(this.props.paseadorSeleccionado);
-        this.props.stomp.send("/app/actualizarUbicacionCliente/"+this.props.lat+"/"+this.props.lng,{},JSON.stringify(this.props.paseadorSeleccionado));
+        this.props.stomp.send("/app/actualizarUbicacionCliente/"+this.props.lat+"/"+this.props.lng+"/"+this.props.numeroSubasta,{},JSON.stringify(this.props.paseadorSeleccionado));
     }
 
     actualizarUbicacionPaseador = function(lat, lng){
