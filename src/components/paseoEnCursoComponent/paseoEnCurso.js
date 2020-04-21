@@ -71,7 +71,7 @@ export default class PaseoEnCurso extends Component{
 
 
 
-    componentWillMount(){
+    componentDidMount(){
         this.props.stomp.send("/app/elegirPaseador/"+this.props.numeroSubasta+"/"+this.props.lat+"/"+this.props.lng,{},JSON.stringify(this.props.paseadorSeleccionado));
         this.conectar();
     }

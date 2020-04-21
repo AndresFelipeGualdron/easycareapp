@@ -99,7 +99,7 @@ export default class PedirPaseo extends Component{
 
     //FIN QUIEN SOY
 
-    componentWillMount(){
+    componentDidMount(){
         console.log("llamando metodos importantes");
         this.quienSoy();
         this.pedirMascotas();

@@ -176,7 +176,8 @@ export default class Subasta extends Component{
 
     actualizarSubastaCorrecto = function(data){
         this.setState({
-            subasta : data
+            subasta : data,
+            flag : "paseoEnCurso"
         });
     }
 
@@ -193,8 +194,7 @@ export default class Subasta extends Component{
             request.request(this.actualizarSubastaCorrecto, this.actualizarSubastaIncorrecto, 'PUT', '/subastas/actualizar', sb);
             console.log(oferta);
             this.setState({
-                paseadorSeleccionado : oferta.ofertor,
-                flag : "paseoEnCurso"
+                paseadorSeleccionado : oferta.ofertor
             });
         }else{
             alert("El paseador ya no etá en la subasta");
@@ -203,7 +203,7 @@ export default class Subasta extends Component{
     }
 
 
-    componentWillMount(){
+    componentDidMount(){
         var webSocket = new WebSocket();
         this.setState({
             socket : webSocket,
