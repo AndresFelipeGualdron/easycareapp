@@ -2,6 +2,7 @@ import React, {Component} from "react";
 
 import Mapa from '../mapaComponent/mapaIndex';
 import Header from '../headerComponent/header';
+import PaseoEnCursoOficial from '../paseoEnCursoOficialComponent/paseoEnCursoOficial';
 
 import { withScriptjs } from "react-google-maps";
 
@@ -12,12 +13,15 @@ export default class PaseoEnCurso extends Component{
     constructor(props){
         super(props);
         this.state = {
-            zoom : 8
+            zoom : 8,
+            flag : 'prePaseo',
+            polyLines : []
         }
 
         this.actualizarUbicacion = this.actualizarUbicacion.bind(this);
         this.conectar = this.conectar.bind(this);
         this.actualizarUbicacionPaseador = this.actualizarUbicacionPaseador.bind(this);
+        this.iniciarPaseo = this.iniciarPaseo.bind(this);
 
 
 
@@ -37,6 +41,12 @@ export default class PaseoEnCurso extends Component{
 
     actualizarUbicacionPaseador = function(lat, lng){
         if(this.props.paseadorSeleccionado.ubicacion.latitud !== lat || this.props.paseadorSeleccionado.ubicacion.longitud !== lng){
+            var li = this.state.polyLines;
+            li.push({"lat" : lat, "lng" : lng})
+            console.log(li);
+            this.setState({
+                polyLines : li
+            });
             var paseador = this.props.paseadorSeleccionado;
             paseador.ubicacion = {
                 latitud : lat,
@@ -47,10 +57,16 @@ export default class PaseoEnCurso extends Component{
 
     }
 
+    iniciarPaseo = function(){
+        this.setState({
+            flag : 'paseoEnCurso'
+        });
+    }
 
     conectar = function(){
         var acpa = this.actualizarUbicacionPaseador;
         var cancelar = this.cancelarPaseo;
+        var comenzar = this.iniciarPaseo;
         this.props.stomp.subscribe("/topic/actualizarUbicacion."+this.props.me.correo,function(eventbody){
             var object = JSON.parse(eventbody.body);
             console.log(object);
@@ -60,6 +76,10 @@ export default class PaseoEnCurso extends Component{
             var object = JSON.parse(eventbody.body);
             cancelar();
         })
+        this.props.stomp.subscribe("/topic/comenzarPaseoVivo."+this.props.me.correo, function(eventbody){
+            var object = JSON.parse(eventbody.body);
+            comenzar()
+        });
         setInterval(this.actualizarUbicacion,10000);
 
     }
@@ -77,10 +97,37 @@ export default class PaseoEnCurso extends Component{
     }
 
     render(){
+        if(this.state.flag === 'paseoEnCurso'){
+            return (
+                <React.Fragment>
+                    <div className='container'>
+                        <Header/>
+                    </div>
+                    <PaseoEnCursoOficial
+                    paseadorSeleccionado = {this.props.paseadorSeleccionado}
+                    locationMap={this.props.locationMap}
+                    direccion = {this.props.direccion}
+                    lat = {this.props.lat}
+                    lng = {this.props.lng}
+                    permitirPaseoOtrasMascotas = {this.props.permitirPaseoOtrasMascotas}
+                    mascotasSeleccionadas = {this.props.mascotasSeleccionadas}
+                    duracionPaseo = {this.props.duracionPaseo}
+                    me = {this.props.me}
+                    stomp = {this.props.stomp}
+                    numeroSubasta = {this.props.numeroSubasta}
+                    actualizarUbicacion = {this.props.actualizarUbicacion}
+                    setPaseadorSeleccionado = {this.props.setPaseadorSeleccionado}
+                    />
+                </React.Fragment>
+            );
+        }
         return (
             <React.Fragment>
                 <div className='container'>
                     <Header/>
+                </div>
+                <div className="container">
+                    <h1>Tu paseador está en Camino.</h1>
                 </div>
                 <MapLoad
                     zoom = {this.state.zoom} 

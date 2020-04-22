@@ -270,12 +270,12 @@ export default class PedirPaseo extends Component{
                             <div className="form-group">
                                 <div className="form-check-inline">
                                     <label className="form-check-label">
-                                        <input defaultChecked onChange={this.seleccionarPaseoMultiplesMascotas} type="radio" className="form-check-input" name="optradio"/>Permitir paseo con otras mascotas
+                                        <input defaultChecked={this.state.permitirPaseoOtrasMascotas} onChange={this.seleccionarPaseoMultiplesMascotas} type="radio" className="form-check-input" name="optradio"/>Permitir paseo con otras mascotas
                                     </label>
                                 </div>
                                 <div className="form-check-inline">
                                     <label className="form-check-label">
-                                        <input onChange = {this.seleccionarPaseoSoloMisMascotas} type="radio" className="form-check-input" name="optradio"/>No permitir paseo con otras mascotas
+                                        <input defaultChecked={!this.state.permitirPaseoOtrasMascotas} onChange = {this.seleccionarPaseoSoloMisMascotas} type="radio" className="form-check-input" name="optradio"/>No permitir paseo con otras mascotas
                                     </label>
                                 </div>
                             </div>
@@ -284,12 +284,8 @@ export default class PedirPaseo extends Component{
                                 <input name="duracionPaseo" onChange={this.cambiar} type='number' placeholder='tiempo' className='form-control' />
                             </div>
                             {(this.state.locationMap) ? (<MapLoader 
-                            // click = {this.clickMapa} 
-                            // lat={this.state.miLat} 
-                            // lng = {this.state.miLng} 
                             zoom = {this.state.zoom} 
                             markers = {[{lat : this.state.miLat, lng :this.state.miLng, label : "me"}]}
-                            // ruta = {{origin : {lat : this.state.miLat, lng : this.state.miLng}, destino : {lat : this.state.miLat, lng : this.state.miLng}}}
                             googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyCqKmVbM7IdQY8obz9cTA6MpIAM2XWgVPs&libraries=geometry,drawing,places"
                             loadingElement={<div style={{ height: `100%` }} />}
                             containerElement={<div style={{ height: `700px` }} />}
