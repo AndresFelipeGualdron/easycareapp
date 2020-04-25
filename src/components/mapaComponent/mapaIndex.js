@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, {Component, PureComponent} from "react";
 import { withGoogleMap, GoogleMap, DirectionsRenderer, Marker, Polyline } from 'react-google-maps';
 
 
@@ -44,8 +44,16 @@ export default class Mapa extends Component{
     
   }
 
+  // shouldComponentUpdate(nextProps, nextState){
+  //   console.log(nextProps);
+    // console.log(this.props);
+  //   console.log(areEqual());
+  //   return false;
+  // }
+
 
     render(){
+      console.log("renderizando...");
       const GoogleMapExample = withGoogleMap(props => (
         <GoogleMap
           defaultCenter={{ lat: this.props.center.lat, lng: this.props.center.lng }}

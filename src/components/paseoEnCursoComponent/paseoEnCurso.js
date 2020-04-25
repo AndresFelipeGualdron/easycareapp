@@ -34,9 +34,24 @@ export default class PaseoEnCurso extends Component{
 
     actualizarUbicacion = function(){
         console.log("actualizando ubicacion");
-        this.props.actualizarUbicacion();
-        console.log(this.props.paseadorSeleccionado);
-        this.props.stomp.send("/app/actualizarUbicacionCliente/"+this.props.lat+"/"+this.props.lng+"/"+this.props.numeroSubasta,{},JSON.stringify(this.props.paseadorSeleccionado));
+        var st = this.props.stomp;
+        var change = this.props.actualizarUbicacion;
+        var subasta = this.props.subasta;
+        var lat = this.props.lat;
+        var lng = this.props.lng;
+        navigator.geolocation.watchPosition((position) => {
+            console.log(position);
+            change(position.coords.latitude, position.coords.longitude);
+            st.send("/app/actualizarUbicacionPaseador/"+lat+"/"+lng,{},JSON.stringify(subasta));
+        },
+        (error) => {
+            alert("Se necesitan permisos de Location.");
+            console.error(error);
+            console.log("paila");
+        });
+        // this.props.actualizarUbicacion();
+        // console.log(this.props.paseadorSeleccionado);
+        // this.props.stomp.send("/app/actualizarUbicacionCliente/"+this.props.lat+"/"+this.props.lng+"/"+this.props.numeroSubasta,{},JSON.stringify(this.props.paseadorSeleccionado));
     }
 
     actualizarUbicacionPaseador = function(lat, lng){
@@ -80,7 +95,8 @@ export default class PaseoEnCurso extends Component{
             var object = JSON.parse(eventbody.body);
             comenzar()
         });
-        setInterval(this.actualizarUbicacion,10000);
+        // setInterval(this.actualizarUbicacion,10000);
+        this.actualizarUbicacion();
 
     }
 

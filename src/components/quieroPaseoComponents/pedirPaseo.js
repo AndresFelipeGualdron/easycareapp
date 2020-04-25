@@ -56,25 +56,11 @@ export default class PedirPaseo extends Component{
 
     }
 
-    actualizarUbicacion = function(){
-        navigator.geolocation.getCurrentPosition(
-            position => {
-                console.log(position);
-                if(this.state.miLat !== position.coords.latitude || this.state.miLng!== position.coords.longitude ){
-                    this.setState({
-                        miLat : position.coords.latitude,
-                        miLng : position.coords.longitude,
-                        precision : position.coords.accuracy
-                    });
-                }
-                
-            },
-            error => {
-                alert("Se necesitan permisos de Location.");
-                console.error(error);
-                console.log("paila");
-            }
-        );
+    actualizarUbicacion = function(lat , lng){
+        this.setState({
+            miLat : lat,
+            miLng : lng
+        });
     }
 
     
