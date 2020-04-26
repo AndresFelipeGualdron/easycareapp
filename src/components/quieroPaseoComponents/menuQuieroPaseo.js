@@ -116,8 +116,6 @@ export default class PaseoMenu extends Component {
                                         Registrar una mascota
                                     </Button>
                                     <br/>
-                                    <Button variant={'outline-secondary'} block>Actualizar una mascota</Button>
-                                    <br/>
                                     <Button onClick={this.pedirPaseo} variant={'outline-secondary'} block>Pedir un
                                         paseo</Button>
                                 </Card.Body>

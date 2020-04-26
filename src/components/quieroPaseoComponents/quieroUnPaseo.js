@@ -16,19 +16,11 @@ import RequestService from "../../services/requestService";
 
 export default class QuieroUnPaseo extends Component {
 
-    emptyPet = {
-        nombre : '',
-        Raza : '',
-        Edad : '',
-        genero : ''
-    }
-
     constructor(props) {
         super(props);
         this.state = {
             flag : 'registro',
-            client:null,
-            pet : this.emptyPet
+            pet : null
         };
         this.handle = this.handle.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -50,8 +42,9 @@ export default class QuieroUnPaseo extends Component {
     }
 
     correcto = data => {
-        this.setState({client:data});
-        console.log(this.state.client);
+        let pet = {...this.state.pet};
+        pet["cliente"] = data;
+        this.setState({pet});
     }
 
     incorrecto = error => {
@@ -85,22 +78,17 @@ export default class QuieroUnPaseo extends Component {
     };
 
     async handle(){
-        const client = this.state.client;
-        const pet = this.state.pet;
-        const petLog = {
-            nombre : pet.nombre,
-            raza : pet.Raza,
-            edad : pet.Edad,
-            genero : pet.genero,
-            cliente : client
-        }
+        let pet = {...this.state.pet};
+        const update = this.props.getMascota();
         let request = new RequestService();
-        if(this.props.getMascota()){
-            await request.request(() => {}, () => {}, 'PUT', '/mascotas/mascota', petLog);
-            this.props.setMascota(null);
-        }else {
-            await request.request(() => {}, () => {}, 'POST', '/mascotas', petLog);
+        if (update){
+            pet["id"] = update.id;
+            request.request(() => {}, () => {}, 'PUT','/mascotas', pet);
+        }else{
+            request.request(() => {}, () => {}, 'POST','/mascotas', pet);
         }
+        this.props.setMascota(null);
+
     };
 
     volverAMenu = () => {
@@ -132,7 +120,7 @@ export default class QuieroUnPaseo extends Component {
                                     <Form.Group as={Row} className="justify-content-center">
                                         <Form.Label column sm={2}>Raza:</Form.Label>
                                         <Col xs={6}>
-                                            <Form.Control as={"select"} onChange={this.handleChange} name={"Raza"}>
+                                            <Form.Control as={"select"} onChange={this.handleChange} name={"raza"}>
                                                 <option>Husky</option>
                                                 <option>Labrador</option>
                                                 <option>Bulldog</option>
@@ -146,7 +134,7 @@ export default class QuieroUnPaseo extends Component {
                                     <Form.Group as={Row} className="justify-content-center">
                                         <Form.Label column sm={2}>Edad:</Form.Label>
                                         <Col sm={6}> <Form.Control type="text" placeholder="Edad" onChange={this.handleChange}
-                                                                   name={"Edad"}/> </Col>
+                                                                   name={"edad"}/> </Col>
                                     </Form.Group>
                                     <Form.Group as={Row} className="justify-content-center">
                                         <Form.Label column sm={2}>Género:</Form.Label>
