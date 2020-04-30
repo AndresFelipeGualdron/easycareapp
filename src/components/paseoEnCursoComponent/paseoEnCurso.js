@@ -36,13 +36,16 @@ export default class PaseoEnCurso extends Component{
         console.log("actualizando ubicacion");
         var st = this.props.stomp;
         var change = this.props.actualizarUbicacion;
-        var subasta = this.props.subasta;
+        var paseador = this.props.paseadorSeleccionado;
         var lat = this.props.lat;
         var lng = this.props.lng;
         navigator.geolocation.watchPosition((position) => {
             console.log(position);
-            change(position.coords.latitude, position.coords.longitude);
-            st.send("/app/actualizarUbicacionPaseador/"+position.coords.latitude+"/"+position.coords.longitude,{},JSON.stringify(subasta));
+            if(lat !== position.coords.latitud || lng !== position.coords.longitude){
+                change(position.coords.latitude, position.coords.longitude);
+                st.send("/app/actualizarUbicacionCliente/"+position.coords.latitude+"/"+position.coords.longitude,{},JSON.stringify(paseador));
+            }
+            
         },
         (error) => {
             alert("Se necesitan permisos de Location.");
@@ -58,6 +61,7 @@ export default class PaseoEnCurso extends Component{
         if(this.props.paseadorSeleccionado.ubicacion.latitud !== lat || this.props.paseadorSeleccionado.ubicacion.longitud !== lng){
             var li = this.state.polyLines;
             li.push({"lat" : lat, "lng" : lng})
+            console.log("-------------------------------");
             console.log(li);
             this.setState({
                 polyLines : li
@@ -78,20 +82,20 @@ export default class PaseoEnCurso extends Component{
         });
     }
 
-    conectar = function(){
+    conectar = async function(){
         var acpa = this.actualizarUbicacionPaseador;
         var cancelar = this.cancelarPaseo;
         var comenzar = this.iniciarPaseo;
-        this.props.stomp.subscribe("/topic/actualizarUbicacion."+this.props.me.correo,function(eventbody){
+        this.props.stomp.subscribe("/topic/actualizarUbicacion."+this.props.me.correo,async function(eventbody){
             var object = JSON.parse(eventbody.body);
             console.log(object);
             acpa(object.lat, object.lng);
         });
-        this.props.stomp.subscribe("/topic/cancelarPaseo."+this.props.me.correo, function(eventbody){
+        this.props.stomp.subscribe("/topic/cancelarPaseo."+this.props.me.correo, async function(eventbody){
             var object = JSON.parse(eventbody.body);
             cancelar();
         })
-        this.props.stomp.subscribe("/topic/comenzarPaseoVivo."+this.props.me.correo, function(eventbody){
+        this.props.stomp.subscribe("/topic/comenzarPaseoVivo."+this.props.me.correo, async function(eventbody){
             var object = JSON.parse(eventbody.body);
             comenzar()
         });
@@ -133,6 +137,7 @@ export default class PaseoEnCurso extends Component{
                     numeroSubasta = {this.props.numeroSubasta}
                     actualizarUbicacion = {this.props.actualizarUbicacion}
                     setPaseadorSeleccionado = {this.props.setPaseadorSeleccionado}
+                    polyLines ={this.state.polyLines}
                     />
                 </React.Fragment>
             );
@@ -154,6 +159,7 @@ export default class PaseoEnCurso extends Component{
                     containerElement={<div style={{ height: `700px` }} />}
                     mapElement={<div style={{ height: `100%` }} />}
                     center= {{lat : this.props.lat, lng : this.props.lng}}
+                    
                 />
                 <div className='container'>
                     <div className='row'>   
