@@ -16,31 +16,34 @@ export default class Mapa extends Component{
     
   }
 
+
   componentDidMount() {
-    if(this.props.ruta !== undefined){
-      console.log(this.props.markers);
-      const directionsService = new window.google.maps.DirectionsService();
-  
-      const origin = { lat: this.props.ruta.origin.lat, lng: this.props.ruta.origin.lng };
-      const destination = { lat: this.props.ruta.destino.lat, lng: this.props.ruta.destino.lng };
-  
-      directionsService.route(
-        {
-          origin: origin,
-          destination: destination,
-          travelMode: window.google.maps.TravelMode.DRIVING
-        },
-        (result, status) => {
-          if (status === window.google.maps.DirectionsStatus.OK) {
-            this.setState({
-              directions: result
-            });
-          } else {
-            console.error(`error fetching directions ${result}`);
+    setInterval(()=> {
+      if(this.props.ruta !== undefined){
+        console.log(this.props.markers);
+        const directionsService = new window.google.maps.DirectionsService();
+    
+        const origin = { lat: this.props.ruta.origin.lat, lng: this.props.ruta.origin.lng };
+        const destination = { lat: this.props.ruta.destino.lat, lng: this.props.ruta.destino.lng };
+    
+        directionsService.route(
+          {
+            origin: origin,
+            destination: destination,
+            travelMode: window.google.maps.TravelMode.DRIVING
+          },
+          (result, status) => {
+            if (status === window.google.maps.DirectionsStatus.OK) {
+              this.setState({
+                directions: result
+              });
+            } else {
+              console.error(`error fetching directions ${result}`);
+            }
           }
-        }
-      );
-    }
+        );
+      }
+    }, 5000);
     
   }
 
@@ -54,6 +57,7 @@ export default class Mapa extends Component{
 
     render(){
       console.log("renderizando...");
+      console.log(this.props.polyLines);
       const GoogleMapExample = withGoogleMap(props => (
         <GoogleMap
           defaultCenter={{ lat: this.props.center.lat, lng: this.props.center.lng }}
