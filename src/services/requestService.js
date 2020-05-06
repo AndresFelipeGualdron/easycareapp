@@ -4,7 +4,6 @@ export default class RequestService {
 
     request(correcto, incorrecto, metodo, path, body) {
         let init = {};
-        console.info(body);
         if (localStorage.getItem(ACCESS_TOKEN)) {
             let header = new Headers({
                 Authorization: 'Bearer ' + localStorage.getItem(ACCESS_TOKEN),

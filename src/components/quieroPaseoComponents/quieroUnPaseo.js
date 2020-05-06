@@ -89,10 +89,15 @@ export default class QuieroUnPaseo extends Component {
         }
         this.props.setMascota(null);
 
+        alert("Su mascota ha sido actualizada");
+
+        this.props.setFlag('verMascotas');
+
     };
 
-    volverAMenu = () => {
-        this.props.setFlag("menu");
+    async volverAMenu(){
+        await this.props.setFlag("menu");
+        await this.props.setMascota(null);
     };
 
     render() {
@@ -106,7 +111,7 @@ export default class QuieroUnPaseo extends Component {
                     <Row className="justify-content-center">
                         <Col xs={7}>
                             <Card style={{width: '33rem'}} className="text-center" bg={"light"}>
-                                <Card.Header><h3>Registra tu perrito</h3></Card.Header>
+                                <Card.Header><h3>{this.props.getMascota() ? "Edita tu perrito" : "Registra tu perrito"}</h3></Card.Header>
                                 <br/><br/>
                                 <Form>
                                     <Form.Group as={Row} className="justify-content-center">

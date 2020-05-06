@@ -50,10 +50,6 @@ export default class PedirPaseo extends Component{
         this.quienSoyIncorrecto = this.quienSoyIncorrecto.bind(this);
         this.actualizarUbicacion = this.actualizarUbicacion.bind(this);
 
-        this.pedirMascotas();
-        this.pedirLocation();
-
-
     }
 
     actualizarUbicacion = function(lat , lng){
@@ -93,25 +89,25 @@ export default class PedirPaseo extends Component{
     }
 
     //Pedir mascotas
-    pedirMascotas = function(){
+    pedirMascotas(){
         var request = new RequestService();
         request.request(this.pedirMascotasCorrecto, this.pedirMascotasIncorrecto, 'GET', '/clients/cliente/mascotas');
         
     }
 
-    pedirMascotasCorrecto = function(data){
+    pedirMascotasCorrecto(data){
         console.log(data);
         this.setState({mascotas : data});
     }
 
-    pedirMascotasIncorrecto = function(error){
+    pedirMascotasIncorrecto(error){
         console.error(error);
     }
 
     //Fin pedir mascotas
 
     //LOCALIZAR
-    pedirLocation = function(){
+    pedirLocation(){
         navigator.geolocation.getCurrentPosition(
             position => {
                 console.log(position);
@@ -133,38 +129,23 @@ export default class PedirPaseo extends Component{
 
     //FIN LOCALIZAR
 
-    seleccionarMascota = function(mascota){
+    seleccionarMascota(mascota){
         var temp1 = this.state.mascotasSeleccionadas;
-        var temp2 = this.state.mascotas;
         temp1.push(mascota);
-        this.setState(
-            {
-                mascotasSeleccionadas : temp1,
-            }
-        );
-        var ind = temp2.indexOf(mascota);
-        if(ind !== -1){
-            temp2.splice(ind, 1);
-            this.setState({
-                mascotas : temp2,
-            });
-        }
+        this.setState({mascotasSeleccionadas:temp1});
+        var temp2 = [...this.state.mascotas].filter(pet => mascota.id !== pet.id);
+        this.setState({mascotas : temp2});
     }
 
-    eliminarMascotaSeleccionada = function(mascota){
-        var temp1 = this.state.mascotasSeleccionadas;
+    eliminarMascotaSeleccionada(mascota){
         var temp2 = this.state.mascotas;
         temp2.push(mascota);
         this.setState({
             mascotas : temp2
         });
-        var ind = temp1.indexOf(mascota);
-        if(ind !== -1){
-            temp1.splice(ind,1);
-            this.setState({
-                mascotasSeleccionadas : temp1
-            });
-        }
+
+        var temp1 = [...this.state.mascotasSeleccionadas].filter(pet => pet.id !== mascota.id);
+        this.setState({mascotas:temp1});
     }
 
     seleccionarPaseoMultiplesMascotas = function(){
@@ -179,7 +160,7 @@ export default class PedirPaseo extends Component{
         });
     }
 
-    cambiar = function(event){
+    cambiar(event){
         this.setState({
             [event.target.name] : event.target.value
         });
