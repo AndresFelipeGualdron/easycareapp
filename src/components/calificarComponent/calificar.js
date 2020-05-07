@@ -14,7 +14,8 @@ export default class Calificar extends Component{
 
     calificar = function(cal){
         var request = new RequestService();
-        this.props.paseadorSeleccionado.calificacion = cal;
+        this.props.paseadorSeleccionado.numCalificaciones = this.props.paseadorSeleccionado.numCalificaciones + 1;
+        this.props.paseadorSeleccionado.calificacion = (this.props.paseadorSeleccionado.calificacion + cal) / this.props.paseadorSeleccionado.numCalificaciones;        
         console.log(this.props.paseadorSeleccionado);
         request.request(this.calificarCorrecto.bind(this), this.calificarIncorrecto.bind(this),'PUT','/paseadores/actualizar',this.props.paseadorSeleccionado);
     }
