@@ -7,6 +7,7 @@ import RequestService from '../../services/requestService';
 
 import Header from '../headerComponent/header';
 import EstrellasRanking from '../estrellasRankingComponent/estrellasRanking';
+import Calificar from '../calificarComponent/calificar';
 
 import './subasta.css';
 import PaseoEnCurso from "../paseoEnCursoComponent/paseoEnCurso";
@@ -40,8 +41,17 @@ export default class Subasta extends Component{
         this.setPaseadorSeleccionado = this.setPaseadorSeleccionado.bind(this);
         this.actualizarSubastaCorrecto = this.actualizarSubastaCorrecto.bind(this);
         this.actualizarSubastaIncorrecto = this.actualizarSubastaIncorrecto.bind(this);
+        this.setFlag = this.setFlag.bind(this);
 
     }
+
+    setFlag = function(f){
+        this.setState({
+            flag : f
+        });
+    }
+
+    
 
     setPaseadorSeleccionado = function(paseador){
         this.setState({
@@ -228,6 +238,14 @@ export default class Subasta extends Component{
             numeroSubasta = {this.state.numeroSubasta}
             actualizarUbicacion = {this.props.actualizarUbicacion}
             setPaseadorSeleccionado = {this.setPaseadorSeleccionado}
+            setFlag = {this.setFlag}
+            />
+        }
+        if(this.state.flag === 'calificar'){
+            return <Calificar
+                setPaseadorSeleccionado = {this.setPaseadorSeleccionado}
+                paseadorSeleccionado = {this.state.paseadorSeleccionado}
+                setFlag = {this.setFlag}
             />
         }
         return <React.Fragment>

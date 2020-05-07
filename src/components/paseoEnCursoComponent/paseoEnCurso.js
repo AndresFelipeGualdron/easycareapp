@@ -138,6 +138,7 @@ export default class PaseoEnCurso extends Component{
                     actualizarUbicacion = {this.props.actualizarUbicacion}
                     setPaseadorSeleccionado = {this.props.setPaseadorSeleccionado}
                     polyLines ={this.state.polyLines}
+                    setFlag = {this.props.setFlag}
                     />
                 </React.Fragment>
             );

@@ -12,6 +12,24 @@ export default class PaseoEnCursoOficial extends Component{
         this.state = {
             zoom : 15
         }
+        this.finalizarPaseo = this.finalizarPaseo.bind(this);
+    }
+
+    finalizarPaseo = function(){
+        this.props.setFlag("calificar");
+    }
+
+    conectar = function(){
+        var fin = this.finalizarPaseo;
+        this.props.stomp.subscribe("/topic/finPaseo."+this.props.me.correo,async function(eventbody){
+            var object = JSON.parse(eventbody.body);    
+            console.log(object);
+            fin();
+        });
+    }
+
+    componentDidMount(){
+        this.conectar();
     }
 
     render(){
