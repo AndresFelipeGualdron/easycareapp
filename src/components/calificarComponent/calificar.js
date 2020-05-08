@@ -13,9 +13,24 @@ export default class Calificar extends Component{
     }
 
     calificar = function(cal){
+        console.log(cal);
+        console.log(this.props.paseadorSeleccionado);
         var request = new RequestService();
-        this.props.paseadorSeleccionado.numCalificaciones = this.props.paseadorSeleccionado.numCalificaciones + 1;
-        this.props.paseadorSeleccionado.calificacion = (this.props.paseadorSeleccionado.calificacion + cal) / this.props.paseadorSeleccionado.numCalificaciones;        
+        var antNumCal = this.props.paseadorSeleccionado.numCalificaciones;
+        var antCal = this.props.paseadorSeleccionado.calificacion;
+        console.log(antNumCal);
+        console.log(antCal);
+        this.props.paseadorSeleccionado.numCalificaciones = antNumCal + 1;
+        if(antNumCal === 0){
+            this.props.paseadorSeleccionado.calificacion = (antCal + (cal * 1))  / 1;
+        }else{
+            console.log(antCal);
+            console.log(antNumCal);
+            console.log(cal);
+            console.log(((antCal * antNumCal) + cal)  / (antNumCal + 1));
+            this.props.paseadorSeleccionado.calificacion = ((antCal * antNumCal) + cal)  / (antNumCal + 1);
+        }
+        
         console.log(this.props.paseadorSeleccionado);
         request.request(this.calificarCorrecto.bind(this), this.calificarIncorrecto.bind(this),'PUT','/paseadores/actualizar',this.props.paseadorSeleccionado);
     }
