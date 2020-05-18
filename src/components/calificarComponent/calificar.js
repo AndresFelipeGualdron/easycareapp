@@ -3,6 +3,10 @@ import React, {Component} from "react";
 import EstrellasRanking from '../estrellasRankingComponent/estrellasRanking';
 
 import RequestService from '../../services/requestService';
+import {Container} from "@material-ui/core";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import CalificarCSS from "./CalificarCSS";
 
 export default class Calificar extends Component{
 
@@ -30,7 +34,7 @@ export default class Calificar extends Component{
             console.log(((antCal * antNumCal) + cal)  / (antNumCal + 1));
             this.props.paseadorSeleccionado.calificacion = ((antCal * antNumCal) + cal)  / (antNumCal + 1);
         }
-        
+
         console.log(this.props.paseadorSeleccionado);
         request.request(this.calificarCorrecto.bind(this), this.calificarIncorrecto.bind(this),'PUT','/paseadores/actualizar',this.props.paseadorSeleccionado);
     }
@@ -44,23 +48,32 @@ export default class Calificar extends Component{
         console.log(error);
     }
 
-
     render(){
+        // const classes = CalificarCSS();
         return (
-        <React.Fragment>
-            <div className = "container justify-content-center align-items-center">
-                <div className="row justify-content-center align-items-center">
-                    <h3>Califica tu paseo.</h3>
+            <React.Fragment>
+                <div className = "container justify-content-center align-items-center">
+                    <div className="row justify-content-center align-items-center">
+                        <h3>Califica tu paseo.</h3>
+                    </div>
+                    <div className="row justify-content-center align-items-center">
+                        <EstrellasRanking
+                            puntaje = {0}
+                            seleccionable = {true}
+                            clickCalificar = {this.calificar}
+                        />
+                    </div>
                 </div>
-                <div className="row justify-content-center align-items-center">
-                    <EstrellasRanking
-                    puntaje = {0}
-                    seleccionable = {true}
-                    clickCalificar = {this.calificar}
-                    />
-                </div>
-            </div>
-        </React.Fragment>
+            </React.Fragment>
+
+            // <Container>
+            //     <Grid container justify={"center"}>
+            //         <Typography className={classes.title}>
+            //             Califica tu paseo.
+            //         </Typography>
+            //     </Grid>
+            // </Container>
+
         );
     }
 }

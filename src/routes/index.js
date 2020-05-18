@@ -6,6 +6,7 @@ import Registro from '../components/registroComponent/registro';
 import Home from '../components/homeComponent/home';
 import PaseadoresRanking from '../components/paseadoresRankingComponent/paseadoresRanking';
 import PaseoMenu from "../components/quieroPaseoComponents/menuQuieroPaseo";
+import Calificar from "../components/calificarComponent/calificar";
 
 export default ()=>(
     
@@ -16,6 +17,7 @@ export default ()=>(
             <Route path="/registro" exact component={Registro}/>
             <Route path="/paseadores" exact component={PaseadoresRanking}/>
             <Route path="/menuPaseo" exact component={PaseoMenu}/>
+            <Route path={"/calificar"} exact component={Calificar}/>
         </Switch>
     </Router>
 );
