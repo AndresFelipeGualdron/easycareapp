@@ -211,10 +211,6 @@ export default class PedirPaseo extends Component{
         }
         return (
             <React.Fragment>
-                <div className='container'>
-                    <Header/>
-                </div>                
-                <hr/>
                 <div className="container">
                     <div className="row justify-content-center">
                         <form>

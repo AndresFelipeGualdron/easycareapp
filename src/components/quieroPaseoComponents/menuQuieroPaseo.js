@@ -1,129 +1,112 @@
-import React, {Component} from "react";
-import Header from "../headerComponent/header";
-import Container from "react-bootstrap/Container";
-import {Card} from "react-bootstrap";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
-import VerMascotas from "./verMacotas";
+import React from 'react';
+import PropTypes from 'prop-types';
+import SwipeableViews from 'react-swipeable-views';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Typography from '@material-ui/core/Typography';
+import { green } from '@material-ui/core/colors';
+import Box from '@material-ui/core/Box';
 import PedirPaseo from "./pedirPaseo";
-import LoginService from "../../services/loginService";
 import RegistrarMascota from "./registrarMascota";
+import Header from "../headerComponent/header";
 
-export default class PaseoMenu extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            flag: 'menu',
-            mascota: null
-        };
-        this.registrar = this.registrar.bind(this);
-        this.verMascotas = this.verMascotas.bind(this);
+function TabPanel(props) {
+    const { children, value, index, ...other } = props;
 
-        this.verificarAutenticacion = this.verificarAutenticacion.bind(this);
-        this.validacionCorrecta = this.validacionCorrecta.bind(this);
-        this.validacionIncorrecta = this.validacionIncorrecta.bind(this);
+    return (
+        <Typography
+            component="div"
+            role="tabpanel"
+            hidden={value !== index}
+            id={`action-tabpanel-${index}`}
+            aria-labelledby={`action-tab-${index}`}
+            {...other}
+        >
+            {value === index && <Box p={3}>{children}</Box>}
+        </Typography>
+    );
+}
 
-        this.verificarAutenticacion();
+TabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.any.isRequired,
+    value: PropTypes.any.isRequired,
+};
 
-        this.pedirPaseo = this.pedirPaseo.bind(this);
-        this.setFlag = this.setFlag.bind(this);
-        this.setMascota = this.setMascota.bind(this);
-        this.getMascota = this.getMascota.bind(this);
+function a11yProps(index) {
+    return {
+        id: `action-tab-${index}`,
+        'aria-controls': `action-tabpanel-${index}`,
+    };
+}
 
-    }
+const useStyles = makeStyles((theme) => ({
+    root: {
+        backgroundColor: theme.palette.background.paper,
+        width: "100%",
+        textAlign: "center",
+        minHeight: 200,
+    },
+    fab: {
+        position: 'absolute',
+        bottom: theme.spacing(2),
+        right: theme.spacing(2),
+    },
+    fabGreen: {
+        color: theme.palette.common.white,
+        backgroundColor: green[500],
+        '&:hover': {
+            backgroundColor: green[600],
+        },
+    },
+}));
 
-    //Verificar login
+export default function FloatingActionButtonZoom() {
+    const classes = useStyles();
+    const theme = useTheme();
+    const [value, setValue] = React.useState(0);
 
-    verificarAutenticacion = e => {
-        let servicio = new LoginService();
-        servicio.validate(this.validacionCorrecta, this.validacionIncorrecta);
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
     };
 
-    validacionCorrecta = () => {
-        // this.setClaseBoton("oculto");
+    const handleChangeIndex = (index) => {
+        setValue(index);
     };
-
-    validacionIncorrecta = () => {
-        console.log("redireccionando...");
-        window.location = "/iniciarSesion";
-
-    };
-
-    registrar = () => {
-        this.setState({flag: 'registrar'});
-    };
-
-    verMascotas = () => {
-        this.setState({flag: 'verMascotas'});
-    };
-
-    pedirPaseo = function () {
-        this.setState(
-            {
-                flag: 'pedirPaseo'
-            }
-        );
-    }
-
-    setFlag = function (f) {
-        this.setState(
-            {
-                flag: f
-            }
-        );
-    }
-
-    setMascota(mas) {
-        this.setState({
-            mascota : mas
-        });
-    }
-
-    getMascota(){
-        return this.state.mascota;
-    }
-
-
-    render() {
-        if (this.state.flag === 'registrar') {
-            return <RegistrarMascota />
-        } else if (this.state.flag === 'verMascotas') {
-            return <VerMascotas setFlag={this.setFlag} setMascota={this.setMascota} getMascota={this.getMascota}/>;
-        } else if (this.state.flag === 'pedirPaseo') {
-            return <PedirPaseo setFlag={this.setFlag}/>;
-        }
-        return (
-            <React.Fragment>
-                <div className='container'>
-                    <Header/>
-                </div>
-                <br/>
-                <Container>
-                    <Row className='justify-content-center'>
-                        <Col md={'auto'}>
-                            <Card style={{width: '30rem'}} className='text-center' bs={'light'}>
-                                <Card.Img variant='top' src='/img/cachorritos.PNG'/>
-                                <Card.Header><h2>Menú de opciones</h2></Card.Header>
-                                <Card.Body>
-                                    <Button type={'button'} variant={'outline-secondary'} block
-                                            onClick={this.verMascotas}>
-                                        Consultar mis mascotas
-                                    </Button>
-                                    <br/>
-                                    <Button type={'button'} variant={'outline-secondary'} block
-                                            onClick={this.registrar}>
-                                        Registrar una mascota
-                                    </Button>
-                                    <br/>
-                                    <Button onClick={this.pedirPaseo} variant={'outline-secondary'} block>Pedir un
-                                        paseo</Button>
-                                </Card.Body>
-                            </Card>
-                        </Col>
-                    </Row>
-                </Container>
-            </React.Fragment>
-        );
-    }
+    return (
+        <div className={classes.root}>
+            <Header />
+            <AppBar position="static" color="default">
+                <Tabs
+                    value={value}
+                    onChange={handleChange}
+                    indicatorColor="primary"
+                    textColor="primary"
+                    variant="fullWidth"
+                    aria-label="action tabs example"
+                >
+                    <Tab label="Registrar Macota" {...a11yProps(0)} />
+                    <Tab label="Ver mascotas" {...a11yProps(1)} />
+                    <Tab label="Pedir paseo" {...a11yProps(2)} />
+                </Tabs>
+            </AppBar>
+            <SwipeableViews
+                axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+                index={value}
+                onChangeIndex={handleChangeIndex}
+            >
+                <TabPanel value={value} index={0} dir={theme.direction}>
+                    <RegistrarMascota />
+                </TabPanel>
+                <TabPanel value={value} index={1} dir={theme.direction}>
+                    Item three
+                </TabPanel>
+                <TabPanel value={value} index={2} dir={theme.direction}>
+                    <PedirPaseo />
+                </TabPanel>
+            </SwipeableViews>
+        </div>
+    );
 }
