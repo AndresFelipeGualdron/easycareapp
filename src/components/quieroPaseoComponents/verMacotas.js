@@ -30,7 +30,7 @@ export default function VerMascotas() {
         function incorrecto(error) {
             console.error(error);
         }
-    }, [])
+    }, [mascotas])
 
 
 

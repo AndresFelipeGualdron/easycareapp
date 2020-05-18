@@ -12,6 +12,9 @@ import PedirPaseo from "./pedirPaseo";
 import RegistrarMascota from "./registrarMascota";
 import Header from "../headerComponent/header";
 import VerMascotas from "./verMacotas";
+import AddCircleTwoToneIcon from '@material-ui/icons/AddCircleTwoTone';
+import PetsIcon from '@material-ui/icons/Pets';
+import DirectionsWalkIcon from '@material-ui/icons/DirectionsWalk';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -68,10 +71,12 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function FloatingActionButtonZoom() {
+export default function MenuPaseo() {
     const classes = useStyles();
     const theme = useTheme();
     const [value, setValue] = React.useState(0);
+
+
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -95,9 +100,9 @@ export default function FloatingActionButtonZoom() {
                         variant="fullWidth"
                         aria-label="action tabs example"
                     >
-                        <Tab label="Registrar Macota" {...a11yProps(0)} />
-                        <Tab label="Ver mascotas" {...a11yProps(1)} />
-                        <Tab label="Pedir paseo" {...a11yProps(2)} />
+                        <Tab label="Registrar Macota" icon={<AddCircleTwoToneIcon />} {...a11yProps(0)} />
+                        <Tab label="Ver mascotas" icon={<PetsIcon />} {...a11yProps(1)} />
+                        <Tab label="Pedir paseo" icon={<DirectionsWalkIcon />} {...a11yProps(2)} />
                     </Tabs>
                 </AppBar>
                 <SwipeableViews

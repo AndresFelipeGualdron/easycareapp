@@ -1,7 +1,5 @@
 import React, {Component} from "react";
 
-
-import Header from "../headerComponent/header";
 import Subasta from "../subastaComponent/subasta";
 import Mapa from '../mapaComponent/mapaIndex';
 

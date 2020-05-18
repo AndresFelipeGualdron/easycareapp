@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 
 import Mapa from '../mapaComponent/mapaIndex';
-import Header from '../headerComponent/header';
 import PaseoEnCursoOficial from '../paseoEnCursoOficialComponent/paseoEnCursoOficial';
 
 import { withScriptjs } from "react-google-maps";
@@ -142,9 +141,6 @@ export default class PaseoEnCurso extends Component{
         }
         return (
             <React.Fragment>
-                <div className='container'>
-                    <Header/>
-                </div>
                 <div className="container">
                     <h1>Tu paseador está en Camino.</h1>
                 </div>
