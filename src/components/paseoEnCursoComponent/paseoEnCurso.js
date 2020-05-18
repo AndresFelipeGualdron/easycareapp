@@ -120,9 +120,6 @@ export default class PaseoEnCurso extends Component{
         if(this.state.flag === 'paseoEnCurso'){
             return (
                 <React.Fragment>
-                    <div className='container'>
-                        <Header/>
-                    </div>
                     <PaseoEnCursoOficial
                     paseadorSeleccionado = {this.props.paseadorSeleccionado}
                     locationMap={this.props.locationMap}

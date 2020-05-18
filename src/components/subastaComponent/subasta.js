@@ -250,10 +250,6 @@ export default class Subasta extends Component{
         }
         return <React.Fragment>
             <div className='container'>
-                <Header/>
-            </div>
-            <hr/>
-            <div className='container'>
                 <button className='btn btn-danger' onClick={this.cancelarSubasta} >Cancelar Subasta</button>
                 <div className='row justify-content-center'>
                     <div className='col-md-6 col-sm-12 paseadoresSection'>

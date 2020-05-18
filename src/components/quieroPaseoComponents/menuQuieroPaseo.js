@@ -11,6 +11,7 @@ import Box from '@material-ui/core/Box';
 import PedirPaseo from "./pedirPaseo";
 import RegistrarMascota from "./registrarMascota";
 import Header from "../headerComponent/header";
+import VerMascotas from "./verMacotas";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -45,9 +46,10 @@ function a11yProps(index) {
 const useStyles = makeStyles((theme) => ({
     root: {
         backgroundColor: theme.palette.background.paper,
-        width: "100%",
+        width: "70%",
         textAlign: "center",
         minHeight: 200,
+        margin: "auto"
     },
     fab: {
         position: 'absolute',
@@ -61,6 +63,9 @@ const useStyles = makeStyles((theme) => ({
             backgroundColor: green[600],
         },
     },
+    all:{
+        width:'100%'
+    }
 }));
 
 export default function FloatingActionButtonZoom() {
@@ -76,37 +81,42 @@ export default function FloatingActionButtonZoom() {
         setValue(index);
     };
     return (
-        <div className={classes.root}>
-            <Header />
-            <AppBar position="static" color="default">
-                <Tabs
-                    value={value}
-                    onChange={handleChange}
-                    indicatorColor="primary"
-                    textColor="primary"
-                    variant="fullWidth"
-                    aria-label="action tabs example"
+        <div>
+            <div className={classes.all}>
+                <Header />
+            </div>
+            <div className={classes.root}>
+                <AppBar position="static" color="default">
+                    <Tabs
+                        value={value}
+                        onChange={handleChange}
+                        indicatorColor="primary"
+                        textColor="primary"
+                        variant="fullWidth"
+                        aria-label="action tabs example"
+                    >
+                        <Tab label="Registrar Macota" {...a11yProps(0)} />
+                        <Tab label="Ver mascotas" {...a11yProps(1)} />
+                        <Tab label="Pedir paseo" {...a11yProps(2)} />
+                    </Tabs>
+                </AppBar>
+                <SwipeableViews
+                    axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+                    index={value}
+                    onChangeIndex={handleChangeIndex}
                 >
-                    <Tab label="Registrar Macota" {...a11yProps(0)} />
-                    <Tab label="Ver mascotas" {...a11yProps(1)} />
-                    <Tab label="Pedir paseo" {...a11yProps(2)} />
-                </Tabs>
-            </AppBar>
-            <SwipeableViews
-                axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-                index={value}
-                onChangeIndex={handleChangeIndex}
-            >
-                <TabPanel value={value} index={0} dir={theme.direction}>
-                    <RegistrarMascota />
-                </TabPanel>
-                <TabPanel value={value} index={1} dir={theme.direction}>
-                    Item three
-                </TabPanel>
-                <TabPanel value={value} index={2} dir={theme.direction}>
-                    <PedirPaseo />
-                </TabPanel>
-            </SwipeableViews>
+                    <TabPanel value={value} index={0} dir={theme.direction}>
+                        <RegistrarMascota />
+                    </TabPanel>
+                    <TabPanel value={value} index={1} dir={theme.direction}>
+                        <VerMascotas />
+                    </TabPanel>
+                    <TabPanel value={value} index={2} dir={theme.direction}>
+                        <PedirPaseo />
+                    </TabPanel>
+                </SwipeableViews>
+            </div>
         </div>
+
     );
 }
