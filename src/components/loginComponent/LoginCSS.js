@@ -24,6 +24,9 @@ export default function useLoginCSS() {
         button:{
             width : 'auto%',
             height: "auto%"
+        },
+        signUp:{
+            textAlign:"left"
         }
     }))
 

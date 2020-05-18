@@ -5,7 +5,7 @@ import Logo from '../logoComponent/logo';
 import ModalCargando from '../modalCargandoComponent/modalCargando';
 import LoginService from '../../services/loginService';
 
-import {Container} from "@material-ui/core";
+import {Container, Link} from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
@@ -128,7 +128,11 @@ export default function Login() {
                                 type={'password'}
                                 onChange={handle}
                             />
-                            <br/><br/><br/>
+                            <Grid item className={classes.signUp}>
+                                <hr/>
+                                <Link href={'/registro'}>Registrate</Link>
+                            </Grid>
+                            <br/>
                             <ColorButton type={'submit'}>
                                 Login
                             </ColorButton>

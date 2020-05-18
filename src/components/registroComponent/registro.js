@@ -1,146 +1,148 @@
-import React, {Component} from 'react';
+import React, {useEffect, useState} from "react";
+import LoginService from "../../services/loginService";
+import {Button, Card, Container, Grid} from "@material-ui/core";
+import CardMedia from "@material-ui/core/CardMedia";
+import Logo from "../logoComponent/logo";
+import RegistroCSS from "./RegistroCSS";
+import CardContent from "@material-ui/core/CardContent";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
+import ModalCargando from "../modalCargandoComponent/modalCargando";
+import {ACCESS_TOKEN} from "../../constants";
 
-import { ACCESS_TOKEN } from '../../constants/index';
-import LoginService from '../../services/loginService';
-import ModalCargando from '../modalCargandoComponent/modalCargando';
+export default function Registro() {
 
-import Logo from '../logoComponent/logo';
+    const [person, setPerson] = useState(null);
+    const [charging, setCharging] = useState(false);
 
-export default class Registro extends Component{
+    const classes = RegistroCSS();
 
-    constructor(){
-        super();
-        this.state = {
-            cargando : false,
-            correo : "",
-            password: "",
-            rePassword: "",
-            cedula: "",
-            nombre: "",
-            telefono: ""
-        };
+    useEffect(() => {
+        function verificarAutenticacion() {
+            let servicio = new LoginService();
+            servicio.validate(validacionCorrecta, validacionIncorrecta);
+        }
 
+        function validacionCorrecta() {
+            console.log('Redireccionando...');
+            window.location('/');
+        }
 
-        this.verificarAutenticacion = this.verificarAutenticacion.bind(this);
-        this.validacionCorrecta = this.validacionCorrecta.bind(this);
-        this.validacionIncorrecta = this.validacionIncorrecta.bind(this);
-        this.registrar = this.registrar.bind(this);
-        this.hadleChange = this.hadleChange.bind(this);
-        this.registroCorrecto = this.registroCorrecto.bind(this);
-        this.registroIncorrecto = this.registroIncorrecto.bind(this);
+        function validacionIncorrecta() {
+            // this.setClaseBoton("");
+        }
 
+        verificarAutenticacion();
+    })
+
+    function handle(event) {
+        setPerson({...person, [event.target.name]: event.target.value});
     }
 
-    componentWillMount = function(){
-        this.verificarAutenticacion();
-    }
-
-    //Verificar login
-
-    hadleChange(event){
-        this.setState({
-            [event.target.name] : event.target.value
-        });
-    }
-
-    verificarAutenticacion = function(e){
-        var servicio = new LoginService();
-        servicio.validate(this.validacionCorrecta,this.validacionIncorrecta);
-    }
-
-    validacionCorrecta = function(){
-        // this.setClaseBoton("oculto");
-        console.log("redireccionando...");
-        window.location="/";
-        
-    }
-
-    validacionIncorrecta = function(){
-        // this.setClaseBoton("");
-        
-    }
-
-    //Fin verificar login
-
-    //REGISTRO
-    registrar(event){
+    function registrar(event) {
         event.preventDefault();
-        console.log(this.state.correo + " "+ this.state.password + " " + this.state.rePassword);
-        
-        if(this.state.password === this.state.rePassword){
-            this.setState({
-                cargando : true
-            });
-            var servicio = new LoginService();
-            servicio.registrar(this.state.correo,this.state.password,this.state.nombre,this.state.cedula,this.state.telefono,this.registroCorrecto, this.registroIncorrecto);
+        console.log(person.correo + " "+ person.password + " " + person.rePassword);
+
+        if(person.password === person.rePassword){
+            setCharging(true);
+            let servicio = new LoginService();
+            servicio.registrar(person.correo, person.password, person.nombre, person.cedula,person.telefono, registroCorrecto, registroIncorrecto);
         }else{
             alert("Las contraseñas no son iguales");
         }
-        
     }
 
-    registroCorrecto = function (token){
+    function registroCorrecto(token) {
         localStorage.setItem(ACCESS_TOKEN, token);
-        this.setState({
-            cargando : false
-        });
-        this.verificarAutenticacion();
+        setCharging(false);
     }
 
-    registroIncorrecto = function (error){
-        this.setState({
-            cargando : false
-        });
-        console.log(error);
-        alert("No se pudo realizar el registro. Intentelo más tarde.");
+    function registroIncorrecto() {
+        setCharging(false);
+        alert("No se pudo realizar el registro. Intentelo más tarde");
     }
 
-    //FIN REGISTRO
-
-    render(){
-        return (
-            <React.Fragment>
-                <ModalCargando
-                modalIsOpen = {this.state.cargando}
-                />
-                <div className="container">
-                    <div className="">
-                        <Logo/>
-                    </div>
-                    <div className="contenido">
-                        <center>
-                            <h3>Registrarse</h3>
-                            <h6>Bienvenido!</h6>
-                        </center>
-                    </div>
-                    <div className="container">
-                        <form onSubmit={this.registrar}>
-                            <div className="form-group">
-                                <input required type="email" name="correo" onChange={this.hadleChange} className="form-control" placeholder="Email"></input>
-                            </div>
-                            <div className="form-group">
-                                <input required type="text" name="nombre" onChange={this.hadleChange} className="form-control" placeholder="Nombre"></input>
-                            </div>
-                            <div className="form-group">
-                                <input required type="text" name="cedula" onChange={this.hadleChange} className="form-control" placeholder="Cedula"></input>
-                            </div>
-                            <div className="form-group">
-                                <input required type="text" name="telefono" onChange={this.hadleChange} className="form-control" placeholder="Telefono"></input>
-                            </div>
-                            <div className="form-group">
-                                <input required type="password" name="password" onChange={this.hadleChange} className="form-control" placeholder="Password"></input>
-                            </div>
-                            <div className="form-group">
-                                <input required type="password" name="rePassword" onChange={this.hadleChange} className="form-control" placeholder="Password again"></input>
-                            </div>
-                            <a href="/iniciarSesion"><h6>Ya teines cuenta?</h6></a>
-                            <button className="btn btn-light">Enviar</button>
+    return (
+        <Container>
+            <ModalCargando
+                modalIsOpen={charging}
+            />
+            <Logo/>
+            <br/>
+            <Grid container justify={"center"} >
+                <Card item className={classes.card} variant={"outlined"}>
+                    <br/>
+                    <CardMedia
+                        className={classes.image}
+                        component={'img'}
+                        image="/img/cachorritos.PNG"
+                    />
+                    <CardContent className={classes.content}>
+                        <Typography className={classes.title} color={"textSecondary"} gutterBottom>
+                            Registrate
+                        </Typography>
+                        <hr/>
+                        <form onSubmit={registrar}>
+                            <TextField
+                                className={classes.textField}
+                                name={'correo'}
+                                onChange={handle}
+                                label={'Correo'}
+                                required
+                                size={"small"}
+                            />
+                            <TextField
+                                className={classes.textField}
+                                name={'nombre'}
+                                onChange={handle}
+                                label={'Nombres'}
+                                required
+                                size={"small"}
+                            />
+                            <TextField
+                                className={classes.textField}
+                                name={'cedula'}
+                                onChange={handle}
+                                label={'Cedula'}
+                                required
+                                size={"small"}
+                            />
+                            <TextField
+                                className={classes.textField}
+                                name={'telefono'}
+                                onChange={handle}
+                                label={'Telefono'}
+                                required
+                                size={"small"}
+                            />
+                            <TextField
+                                className={classes.textField}
+                                name={'password'}
+                                onChange={handle}
+                                label={'Contraseña'}
+                                required
+                                size={"small"}
+                                type={'password'}
+                            />
+                            <TextField
+                                className={classes.textField}
+                                name={'rePassword'}
+                                onChange={handle}
+                                label={'Confirmar contraseña'}
+                                required
+                                size={"small"}
+                                type={'password'}
+                            />
+                            <br/><br/>
+                            <Button type={"submit"} color={'primary'}>
+                                Registrarse
+                            </Button>
                         </form>
-                        
-                    </div>
-                </div>
-            </React.Fragment>
-            
-        );
-    }
+                    </CardContent>
+                </Card>
+            </Grid>
+
+        </Container>
+    )
+
 }
