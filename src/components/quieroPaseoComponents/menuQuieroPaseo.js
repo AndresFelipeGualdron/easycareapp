@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import SwipeableViews from 'react-swipeable-views';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
@@ -15,6 +15,7 @@ import VerMascotas from "./verMacotas";
 import AddCircleTwoToneIcon from '@material-ui/icons/AddCircleTwoTone';
 import PetsIcon from '@material-ui/icons/Pets';
 import DirectionsWalkIcon from '@material-ui/icons/DirectionsWalk';
+import LoginService from "../../services/loginService";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -76,7 +77,23 @@ export default function MenuPaseo() {
     const theme = useTheme();
     const [value, setValue] = React.useState(0);
 
+    useEffect(() => {
 
+        verificarAutenticacion();
+
+        function verificarAutenticacion(){
+            let servicio = new LoginService();
+            servicio.validate(validacionCorrecta, validacionIncorrecta);
+        }
+
+        function validacionCorrecta(){
+
+        }
+        function validacionIncorrecta() {
+            console.log("redireccionando...");
+            window.location = '/iniciarSesion';
+        }
+    }, [])
 
     const handleChange = (event, newValue) => {
         setValue(newValue);

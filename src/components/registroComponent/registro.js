@@ -25,7 +25,7 @@ export default function Registro() {
 
         function validacionCorrecta() {
             console.log('Redireccionando...');
-            window.location('/');
+            window.location='/';
         }
 
         function validacionIncorrecta() {
@@ -33,14 +33,13 @@ export default function Registro() {
         }
 
         verificarAutenticacion();
-    })
+    },[])
 
     function handle(event) {
         setPerson({...person, [event.target.name]: event.target.value});
     }
 
     function registrar(event) {
-        event.preventDefault();
         console.log(person.correo + " "+ person.password + " " + person.rePassword);
 
         if(person.password === person.rePassword){
@@ -70,7 +69,7 @@ export default function Registro() {
             <Logo/>
             <br/>
             <Grid container justify={"center"} >
-                <Card item className={classes.card} variant={"outlined"}>
+                <Card className={classes.card} variant={"outlined"}>
                     <br/>
                     <CardMedia
                         className={classes.image}
@@ -134,7 +133,7 @@ export default function Registro() {
                                 type={'password'}
                             />
                             <br/><br/>
-                            <Button type={"submit"} color={'primary'}>
+                            <Button type={"submit"} variant={"contained"} color={"primary"}>
                                 Registrarse
                             </Button>
                         </form>

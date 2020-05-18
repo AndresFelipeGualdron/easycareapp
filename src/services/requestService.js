@@ -2,7 +2,7 @@ import {ACCESS_TOKEN, API_BASE_URL_BACK} from '../constants/index';
 
 export default class RequestService {
 
-    request(correcto, incorrecto, metodo, path, body) {
+    request(correcto, incorrecto, metodo, path, body, signal) {
         let init = {};
         if (localStorage.getItem(ACCESS_TOKEN)) {
             let header = new Headers({
@@ -11,16 +11,17 @@ export default class RequestService {
                 'Content-Type': 'application/json'
             });
 
-            if (metodo === 'POST' || metodo === 'PUT'){
-                init = {
-                    method : metodo,
-                    headers : header,
-                    body : JSON.stringify(body)
-                };
-            }else {
+            if (metodo === 'POST' || metodo === 'PUT') {
                 init = {
                     method: metodo,
-                    headers: header
+                    headers: header,
+                    body: JSON.stringify(body)
+                };
+            } else {
+                init = {
+                    method: metodo,
+                    headers: header,
+                    signal: signal
                 };
             }
         } else {
@@ -31,13 +32,13 @@ export default class RequestService {
 
         fetch(API_BASE_URL_BACK + path, init)
             .then(response => {
-                if (metodo === 'PUT' || metodo === 'POST' || metodo === 'DELETE'){
-                    if(response.ok){
+                if (metodo === 'PUT' || metodo === 'POST' || metodo === 'DELETE') {
+                    if (response.ok) {
                         console.info("Solicitud aceptada");
-                    }else{
+                    } else {
                         console.info("Error en la solicitud");
                     }
-                }else{
+                } else {
                     if (response.ok) {
                         return response.json();
                     } else {
@@ -53,8 +54,12 @@ export default class RequestService {
                 }
 
             }).catch(function (error) {
-            console.log("error");
-            incorrecto(error);
+            if (error.name === 'AbortError') {
+                console.info('Peticion Abortada');
+            } else {
+                console.log("error");
+                incorrecto(error);
+            }
         })
 
     }

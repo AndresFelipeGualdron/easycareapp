@@ -21,14 +21,22 @@ export default function VerMascotas() {
     const [mascota, setMascota] = useState(null);
 
     useEffect(() => {
+        const abortController = new AbortController();
+        const signal = abortController.signal;
+
         let request = new RequestService();
-        request.request(correcto, incorrecto, 'GET', '/clients/cliente/mascotas',null);
+        request.request(correcto, incorrecto, 'GET', '/clients/cliente/mascotas',null, signal);
+
         function correcto(data) {
             setMascotas(data);
         }
 
         function incorrecto(error) {
             console.error(error);
+        }
+
+        return () => {
+            abortController.abort();
         }
     }, [mascotas])
 
