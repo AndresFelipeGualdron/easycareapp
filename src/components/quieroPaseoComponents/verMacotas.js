@@ -1,145 +1,94 @@
-import React, {Component} from "react";
-import Header from "../headerComponent/header";
-import {ButtonGroup, Container} from "react-bootstrap";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
+import React, {useEffect, useState} from "react";
 import RequestService from "../../services/requestService";
-import Table from "react-bootstrap/Table";
-import LoginService from "../../services/loginService";
+import Container from "@material-ui/core/Container";
+import Grid from "@material-ui/core/Grid";
+import Table from "@material-ui/core/Table";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import TableCell from "@material-ui/core/TableCell";
+import TableBody from "@material-ui/core/TableBody";
+import DeleteIcon from '@material-ui/icons/Delete';
+import IconButton from "@material-ui/core/IconButton";
+import EditIcon from '@material-ui/icons/Edit';
+import quieroUnPaseoCSS from "./quieroUnPaseoCSS";
+import RegistrarMascota from "./registrarMascota";
 
-export default class VerMascotas extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            flag: 'misMascotas',
-            mascotas: [],
-        };
-        this.volverAMenu = this.volverAMenu.bind(this);
 
-        this.correcto = this.correcto.bind(this);
-        this.incorrecto = this.incorrecto.bind(this);
+export default function VerMascotas() {
+    const style = quieroUnPaseoCSS();
+    const [mascotas, setMascotas] = useState([]);
+    const [flag, setFlag] = useState(false);
+    const [mascota, setMascota] = useState(null);
 
-        this.verificarAutenticacion = this.verificarAutenticacion.bind(this);
-        this.validacionCorrecta = this.validacionCorrecta.bind(this);
-        this.validacionIncorrecta = this.validacionIncorrecta.bind(this);
+    useEffect(() => {
+        const abortController = new AbortController();
+        const signal = abortController.signal
 
-        this.verificarAutenticacion();
-
-        this.editarMascota = this.editarMascota.bind(this);
-        this.eliminarMascota = this.eliminarMascota.bind(this);
-
-        this.clienteCorrecto = this.clienteCorrecto.bind(this);
-    }
-
-    componentDidMount() {
         let request = new RequestService();
-        request.request(this.correcto, this.incorrecto, 'GET', '/clients/cliente/mascotas');
-        request.request(this.clienteCorrecto, this.incorrecto, 'GET', '/clients/cliente/correo');
+        request.request(correcto, incorrecto, 'GET', '/clients/cliente/mascotas',null, signal);
+
+        return () => {
+            abortController.abort();
+        }
+    }, [])
+
+    function correcto(data) {
+        setMascotas(data);
     }
 
-    //Verificar login
-
-    verificarAutenticacion = e => {
-        let servicio = new LoginService();
-        servicio.validate(this.validacionCorrecta, this.validacionIncorrecta);
-    };
-
-    validacionCorrecta = () => {
-        // this.setClaseBoton("oculto");
-    };
-
-    validacionIncorrecta = () => {
-        console.log("redireccionando...");
-        window.location = "/iniciarSesion";
-    };
-
-    // Fin verificar login
-
-    correcto = data => {
-        this.setState({
-            mascotas: data
-        });
-    };
-
-    incorrecto = error => {
+    function incorrecto(error) {
         console.error(error);
-    };
-
-    clienteCorrecto(data){
-        this.setState({cliente:data});
     }
 
-    volverAMenu = () => {
-        this.props.setFlag("menu");
-    };
-
-    editarMascota(pet){
-        pet.cliente = this.state.cliente;
-        this.props.setMascota(pet);
-        this.props.setFlag('registrar');
-    }
-
-    async eliminarMascota(pet){
+    function deletePet(mascota) {
         let request = new RequestService();
-        await request.request(() => {}, () => {}, 'DELETE','/mascotas/mascota/'+pet.id)
-        let updatedPets = [...this.state.mascotas].filter(i => i.id !== pet.id);
-        this.setState({mascotas:updatedPets});
+        request.request(() => {}, () => {}, 'DELETE', `/mascotas/mascota/${mascota.id}`)
     }
 
-    render() {
-        return (
-            <React.Fragment>
-                <div className='container'>
-                    <Header/>
-                </div>                
-                <Container>
-                    <Row className='justify-content-center'>
-                        <Col md={'auto'}>
-                            <h2>Mis mascotas</h2>
-                            <br/><br/>
-                        </Col>
-                    </Row>
-                    <Row className='justify-content-center'>
-                        <Col xs={40}>
-                            <Table striped bordered hover>
-                                <thead>
-                                <tr>
-                                    <th>Nombre</th>
-                                    <th>Raza</th>
-                                    <th>Edad</th>
-                                    <th>Género</th>
-                                    <th>Acción</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {this.state.mascotas.map((mascota, id) => {
-                                    return <tr key={id}>
-                                        <td>{mascota.nombre}</td>
-                                        <td>{mascota.raza}</td>
-                                        <td>{mascota.edad}</td>
-                                        <td>{mascota.genero}</td>
-                                        <td>
-                                            <ButtonGroup>
-                                                <Button variant="primary" onClick={() => this.editarMascota(mascota)}>Editar</Button>
-                                                <Button variant="danger" onClick={() => this.eliminarMascota(mascota)}>Eliminar</Button>
-                                            </ButtonGroup>
-                                        </td>
-                                    </tr>;
-                                })}
-                                </tbody>
-                            </Table>
-                        </Col>
-                    </Row>
-                    <Row className='justify-content-center'>
-                        <Col md={'auto'}>
-                            <Button type={'button'} variant={'outline-warning'} onClick={this.volverAMenu}>
-                                Volver al menu
-                            </Button>
-                        </Col>
-                    </Row>
-                </Container>
-            </React.Fragment>
-        );
+    function updatePet(mascota) {
+        setMascota(mascota);
+        setFlag(true);
     }
+
+    if (flag === true){
+        return <RegistrarMascota mascota={mascota.id}/>
+    }
+
+    return (
+        <Container>
+            <h1 className={style.text}>Mis mascotas</h1>
+            <br/>
+            <Grid container justify={'center'}>
+                <Table className={style.petTable} size={'small'}>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell align={'center'}>Nombre</TableCell>
+                            <TableCell align={'center'}>Raza</TableCell>
+                            <TableCell align={'center'}>Edad (años)</TableCell>
+                            <TableCell align={'center'}>Género</TableCell>
+                            <TableCell align={'center'}>Acción</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {mascotas.map(mascota => (
+                            <TableRow key={mascota.id}>
+                                <TableCell align={'center'}>{mascota.nombre}</TableCell>
+                                <TableCell align={'center'}>{mascota.raza}</TableCell>
+                                <TableCell align={'center'}>{mascota.edad}</TableCell>
+                                <TableCell align={'center'}>{mascota.genero}</TableCell>
+                                <TableCell align={'center'}>
+                                    <IconButton color={'primary'} onClick={() => updatePet(mascota)}>
+                                        <EditIcon/>
+                                    </IconButton>
+                                    <IconButton color={'secondary'} onClick={() => deletePet(mascota)}>
+                                        <DeleteIcon/>
+                                    </IconButton>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </Grid>
+        </Container>
+    )
 }

@@ -5,10 +5,10 @@ import {Card} from "react-bootstrap";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import QuieroUnPaseo from "./quieroUnPaseo";
 import VerMascotas from "./verMacotas";
 import PedirPaseo from "./pedirPaseo";
 import LoginService from "../../services/loginService";
+import RegistrarMascota from "./registrarMascota";
 
 export default class PaseoMenu extends Component {
     constructor(props) {
@@ -87,7 +87,7 @@ export default class PaseoMenu extends Component {
 
     render() {
         if (this.state.flag === 'registrar') {
-            return <QuieroUnPaseo setFlag={this.setFlag} setMascota={this.setMascota} getMascota={this.getMascota}/>;
+            return <RegistrarMascota />
         } else if (this.state.flag === 'verMascotas') {
             return <VerMascotas setFlag={this.setFlag} setMascota={this.setMascota} getMascota={this.getMascota}/>;
         } else if (this.state.flag === 'pedirPaseo') {

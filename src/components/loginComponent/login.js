@@ -1,142 +1,141 @@
-import React, {Component} from 'react';
-import { ACCESS_TOKEN } from '../../constants/index';
+import React, {useEffect, useState} from 'react';
+import {ACCESS_TOKEN} from '../../constants/index';
 
 import Logo from '../logoComponent/logo';
 import ModalCargando from '../modalCargandoComponent/modalCargando';
 import LoginService from '../../services/loginService';
 
+import {Container} from "@material-ui/core";
+import Grid from "@material-ui/core/Grid";
+import Card from "@material-ui/core/Card";
+import CardHeader from "@material-ui/core/CardHeader";
+import CardMedia from "@material-ui/core/CardMedia";
+import CardContent from "@material-ui/core/CardContent";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import withStyles from "@material-ui/core/styles/withStyles";
+import {blue, brown} from "@material-ui/core/colors";
+import useLoginCSS from "./LoginCSS";
 
+const ColorButton = withStyles((theme) => ({
+    root: {
+        color: theme.palette.getContrastText(blue[300]),
+        backgroundColor: brown[200],
+        '&:hover': {
+            backgroundColor: blue[200]
+        },
+    },
+}))(Button);
 
-import './login.css';
+export default function Login() {
 
-export default class Login extends Component{
+    const classes = useLoginCSS();
 
-    constructor(){
-        super();
-        this.state = {
-            correo: "",
-            password: "",
-            cargando: false,
-            sesionIniciada : false
-        };
-        this.hadleChange = this.hadleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.cerrarModal = this.cerrarModal.bind(this);
-        this.verificarAutenticacion = this.verificarAutenticacion.bind(this);
-        this.validacionCorrecta = this.validacionCorrecta.bind(this);
-        this.validacionIncorrecta = this.validacionIncorrecta.bind(this);
-
-        
-        
-    }
-
-    componentWillMount = function(){
-        this.verificarAutenticacion();
-    }
+    const [register, setRegister] = useState({
+        correo: '',
+        password: ''
+    });
+    const [cargando, setCargando] = useState(false);
 
     //Verificar login
 
-    verificarAutenticacion = function(e){
-        var servicio = new LoginService();
-        servicio.validate(this.validacionCorrecta,this.validacionIncorrecta);
+    useEffect(() => {
+        verificarAutentificacion();
+    })
+
+    function verificarAutentificacion() {
+        let servicio = new LoginService();
+        servicio.validate(validacionCorrecta, validacionIncorrecta)
+
     }
 
-    validacionCorrecta = function(){
-        // this.setClaseBoton("oculto");
+    function validacionCorrecta() {
         console.log("redireccionando...");
-        window.location="/";
-        
+        window.location = "/";
     }
 
-    validacionIncorrecta = function(){
-        // this.setClaseBoton("");
-        
+    function validacionIncorrecta() {
+        console.info('Validación incorrecta');
     }
 
-    //Fin verificar login
+    //Fin verficar login
 
-    cerrarModal = function(){
-        this.setState({
-            correo: this.state.correo,
-            password: this.state.password,
-            cargando: false,
-            sesionIniciada: this.state.sesionIniciada
-        });
+    function cerrarModal() {
+        setCargando(false);
     }
 
-    hadleChange(event){
-        this.setState({
-            [event.target.name] : event.target.value
-        });
+    function handle(event) {
+        setRegister({...register, [event.target.name]: event.target.value});
+        console.info(register);
     }
 
-    handleSubmit = (event) => {
-        // console.log(event.target);
-        this.setState({
-            correo: this.state.correo,
-            password: this.state.password,
-            cargando: true,
-            sesionIniciada: this.state.sesionIniciada
-        });
+    function handleSubmit(event) {
+        setCargando(true);
         event.preventDefault();
 
-        var miInit = new Headers({
+        let init = new Headers({
             method: 'POST'
-        });
+        })
 
-        var terminado = this.cerrarModal;
-
-        var loginAceptado = function(token){
-            if(token !== undefined){
+        function loginAceptado(token) {
+            if (token !== undefined) {
                 localStorage.setItem(ACCESS_TOKEN, token);
-                terminado();
-                window.location="/";
+                cerrarModal();
+                window.location = "/";
             }
-            
-        
         }
 
-        var loginRechazado = function(){
-            terminado();
-            alert("login no aceptado");
+        function loginRechazado() {
+            cerrarModal();
+            alert('Login no aceptado');
         }
-        new LoginService().login(this.state.correo,this.state.password, loginAceptado, loginRechazado, miInit);
 
-        
+        new LoginService().login(register.correo, register.password, loginAceptado, loginRechazado, init)
     }
 
-    render(){
-        return (
-            <React.Fragment>
-                <ModalCargando
-                modalIsOpen={this.state.cargando}
-                />
-                <div className="container">
-                    <form onSubmit={this.handleSubmit}>
-                        <div className="">
-                            <Logo/>
-                        </div>
-                        <div className="contenido">
-                            <center>
-                                <h3>Iniciar Sesión</h3>
-                                <h6>Hola de nuevo!</h6>
-                            </center>
-                        </div>
-                        <div className="">
-                            <div className="form-group">
-                                <input name="correo" required onChange={this.hadleChange} type="email" className="form-control" placeholder="Email"></input>
-                            </div>
-                            <div className="form-group">
-                                <input name="password" required onChange={this.hadleChange} type="password" className="form-control" placeholder="Password"></input>
-                            </div>
-                            <a href="/registro"><h6>No tienes cuanta?</h6></a>
-                            <button className="btn btn-light">Ingresar</button>
-                        </div>
-                    </form>
-                </div>
-                                
-            </React.Fragment>
-            
-        );
-    }
+    return (
+        <Container>
+            <ModalCargando modalIsOpen={cargando}/>
+            <Grid container justify={'center'}>
+                <Logo/>
+                <Card className={classes.card} variant={'outlined'}>
+                    <CardHeader
+                        className={classes.head}
+                        title={"Inicio de sesión"}
+                    />
+                    <CardMedia
+                        className={classes.image}
+                        component="img"
+                        alt={'user login'}
+                        image="/img/Sesion.jpg"
+                        height="230"
+                    />
+                    <CardContent className={classes.content}>
+                        <form onSubmit={handleSubmit}>
+                            <TextField
+                                required
+                                name={'correo'}
+                                className={classes.input}
+                                label="Correo"
+                                onChange={handle}
+                            />
+                            <br/>
+                            <TextField
+                                required
+                                name={'password'}
+                                className={classes.input}
+                                label="Contraseña"
+                                type={'password'}
+                                onChange={handle}
+                            />
+                            <br/><br/><br/>
+                            <ColorButton type={'submit'}>
+                                Login
+                            </ColorButton>
+                        </form>
+                    </CardContent>
+                </Card>
+            </Grid>
+        </Container>
+    );
 }
