@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 import LoginService from '../../services/loginService';
 import RequestService from '../../services/requestService';
 import Header from '../headerComponent/header';
+import EstrellasRanking from '../estrellasRankingComponent/estrellasRanking';
 
 export default class PaseadoresRanking extends Component{
 
@@ -98,7 +99,7 @@ export default class PaseadoresRanking extends Component{
                                             {paseador.nombre}
                                         </td>
                                         <td>
-                                            {paseador.calificacion}
+                                            <EstrellasRanking soloLectura={true} puntaje={paseador.calificacion}/>
                                         </td>
                                         <td>
                                             {paseador.telefono}
