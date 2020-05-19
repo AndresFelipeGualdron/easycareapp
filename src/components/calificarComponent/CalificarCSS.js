@@ -9,6 +9,17 @@ export default function CalificarCSS() {
         },
         grid:{
             textAlign:"center"
+        },
+        content:{
+            fontFamily: "cursive",
+            fontSize: 19
+        },
+        gridText:{
+            textAlign:"justify"
+        },
+        img1:{
+            width:'80%',
+            height: '80%'
         }
     }))
     return useStyles();

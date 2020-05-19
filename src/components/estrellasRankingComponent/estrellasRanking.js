@@ -12,12 +12,10 @@ export default class EstrellasRanking extends Component{
         }
     }
 
-    
-
     render(){
         return <React.Fragment>
             <form>
-                <p className="clasificacion">
+                <p className={!this.props.calificar? "clasificacion": "calificacion"}>
                     <input className="estrellaRanking" onClick={(this.props.soloLectura) ? (null) : (this.props.seleccionar)} id="radio1" type="radio" name="calificacion" value="5"/>
                     <label onClick={(event) => {this.clickCa(5)}} className={(this.props.soloLectura ? ( (this.props.puntaje >= 5) ? ('seleccionado') : ('') ) : ('seleccionable'))} htmlFor="radio1">★</label>
                     <input className="estrellaRanking" onClick={(this.props.soloLectura) ? (null) : (this.props.seleccionar)} id="radio2" type="radio" name="calificacion" value="4"/>

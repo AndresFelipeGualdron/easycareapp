@@ -26,6 +26,12 @@
     unicode-bidi: bidi-override;
     font-size: 25px;
   }
+
+  .calificacion{
+    direction: rtl;
+    unicode-bidi: bidi-override;
+    font-size: 50px;
+  }
   
   .seleccionable:hover,
   .seleccionable:hover ~ label {
