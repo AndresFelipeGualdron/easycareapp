@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 
 import Bienvenida from '../bienvenidaComponent/bienvenida';
 import Header from '../headerComponent/header';
+import Prueba from "../bienvenidaComponent/prueba";
 
 export default class Home extends Component {
 
@@ -11,7 +12,7 @@ export default class Home extends Component {
             <div className="container-fluid">
                 <Header
                 />
-                <Bienvenida
+                <Prueba
                 />
             </div>
         );
