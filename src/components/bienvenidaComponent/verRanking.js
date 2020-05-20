@@ -17,8 +17,7 @@ export default function VerRanking() {
             <Grid container justify={"center"}>
                 <Grid item xs={11}>
                     <Typography className={classes.paseoText}>
-                        easyCare te brinda la oportunidad de ser uno de nuestros paseadores y poder acceder a
-                        las subastas de paseo.
+                        Conoce a los paseadores favoritos, en nuestro ranking de paseadores
                     </Typography>
                 </Grid>
             </Grid>
