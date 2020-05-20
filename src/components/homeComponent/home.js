@@ -12,7 +12,7 @@ export default class Home extends Component {
             <div className="container-fluid">
                 <Header
                 />
-                <Prueba
+                <Bienvenida
                 />
             </div>
         );
